@@ -46,8 +46,10 @@ export default function Earth() {
     }
   });
 
+  const earthData = planets.find(p => p.id === 'earth');
+
   return (
-    <group position={[0, 0, -30]}>
+    <group position={earthData.position}>
       {/* 1. Surface Sphere */}
       <mesh ref={earthRef}>
         <sphereGeometry args={[5, 64, 64]} />
