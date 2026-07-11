@@ -1,46 +1,38 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { useStore } from '../store/useStore';
 
 export function useMovement() {
-  const keys = useRef({
-    forward: false,
-    backward: false,
-    left: false,
-    right: false,
-    ascend: false,
-    descend: false,
-    boost: false,
-  });
-
   useEffect(() => {
     const handleKeyDown = (e) => {
+      const setMovement = useStore.getState().setMovement;
       switch (e.code) {
         case 'KeyW':
         case 'ArrowUp':
-          keys.current.forward = true;
+          setMovement('forward', true);
           break;
         case 'KeyS':
         case 'ArrowDown':
-          keys.current.backward = true;
+          setMovement('backward', true);
           break;
         case 'KeyA':
         case 'ArrowLeft':
-          keys.current.left = true;
+          setMovement('left', true);
           break;
         case 'KeyD':
         case 'ArrowRight':
-          keys.current.right = true;
+          setMovement('right', true);
           break;
         case 'Space':
-          keys.current.ascend = true;
+          setMovement('ascend', true);
           break;
         case 'ControlLeft':
         case 'ControlRight':
         case 'KeyC':
-          keys.current.descend = true;
+          setMovement('descend', true);
           break;
         case 'ShiftLeft':
         case 'ShiftRight':
-          keys.current.boost = true;
+          setMovement('boost', true);
           break;
         default:
           break;
@@ -48,34 +40,35 @@ export function useMovement() {
     };
 
     const handleKeyUp = (e) => {
+      const setMovement = useStore.getState().setMovement;
       switch (e.code) {
         case 'KeyW':
         case 'ArrowUp':
-          keys.current.forward = false;
+          setMovement('forward', false);
           break;
         case 'KeyS':
         case 'ArrowDown':
-          keys.current.backward = false;
+          setMovement('backward', false);
           break;
         case 'KeyA':
         case 'ArrowLeft':
-          keys.current.left = false;
+          setMovement('left', false);
           break;
         case 'KeyD':
         case 'ArrowRight':
-          keys.current.right = false;
+          setMovement('right', false);
           break;
         case 'Space':
-          keys.current.ascend = false;
+          setMovement('ascend', false);
           break;
         case 'ControlLeft':
         case 'ControlRight':
         case 'KeyC':
-          keys.current.descend = false;
+          setMovement('descend', false);
           break;
         case 'ShiftLeft':
         case 'ShiftRight':
-          keys.current.boost = false;
+          setMovement('boost', false);
           break;
         default:
           break;
@@ -91,5 +84,6 @@ export function useMovement() {
     };
   }, []);
 
-  return keys;
+  // Return a getter function to read the state without triggering React re-renders in the caller
+  return () => useStore.getState().movement;
 }

@@ -11,6 +11,7 @@ import Minimap from './ui/Minimap';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
 import AudioEngine from './components/AudioEngine';
+import MobileControls from './ui/MobileControls';
 
 function App() {
   const astronautRef = useRef();
@@ -44,6 +45,7 @@ function App() {
     </Canvas>
     <ControlsHint />
     <Minimap astronautRef={astronautRef} />
+    <MobileControls />
     <AudioEngine />
     </>
   );

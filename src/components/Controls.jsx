@@ -11,7 +11,7 @@ const MOUSE_SENSITIVITY = 0.002;
 export default function Controls({ targetRef }) {
   const { gl } = useThree();
   const introComplete = useStore((state) => state.introComplete);
-  const keys = useMovement();
+  const getKeys = useMovement();
   const velocity = useRef(new THREE.Vector3());
   const pitch = useRef(0);
   const yaw = useRef(0);
@@ -34,25 +34,64 @@ export default function Controls({ targetRef }) {
       }
     };
 
+    // --- Mouse Panning (Pointer Lock) ---
     const handleMouseMove = (e) => {
       if (!isLocked.current) return;
-      
       yaw.current -= e.movementX * MOUSE_SENSITIVITY;
       pitch.current -= e.movementY * MOUSE_SENSITIVITY;
-      
-      // Clamp pitch to avoid flipping over (±80 degrees)
       const maxPitch = Math.PI / 2 - 0.1;
       pitch.current = Math.max(-maxPitch, Math.min(maxPitch, pitch.current));
+    };
+
+    // --- Touch Panning (Mobile) ---
+    let lastTouchX = 0;
+    let lastTouchY = 0;
+
+    const handleTouchStart = (e) => {
+      // Only care about the first touch on the canvas
+      if (e.touches.length > 0) {
+        lastTouchX = e.touches[0].clientX;
+        lastTouchY = e.touches[0].clientY;
+      }
+    };
+
+    const handleTouchMove = (e) => {
+      // Prevent default scrolling when swiping on the canvas
+      e.preventDefault();
+      
+      if (e.touches.length > 0) {
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
+        
+        const deltaX = touchX - lastTouchX;
+        const deltaY = touchY - lastTouchY;
+        
+        // Touch sensitivity can be slightly higher than mouse
+        yaw.current -= deltaX * MOUSE_SENSITIVITY * 2;
+        pitch.current -= deltaY * MOUSE_SENSITIVITY * 2;
+        
+        const maxPitch = Math.PI / 2 - 0.1;
+        pitch.current = Math.max(-maxPitch, Math.min(maxPitch, pitch.current));
+        
+        lastTouchX = touchX;
+        lastTouchY = touchY;
+      }
     };
 
     document.addEventListener('pointerlockchange', handlePointerLockChange);
     gl.domElement.addEventListener('pointerdown', handlePointerDown);
     document.addEventListener('mousemove', handleMouseMove);
+    
+    // Bind touch events to canvas
+    gl.domElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+    gl.domElement.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
       document.removeEventListener('pointerlockchange', handlePointerLockChange);
       gl.domElement.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('mousemove', handleMouseMove);
+      gl.domElement.removeEventListener('touchstart', handleTouchStart);
+      gl.domElement.removeEventListener('touchmove', handleTouchMove);
     };
   }, [gl.domElement]);
 
@@ -60,13 +99,14 @@ export default function Controls({ targetRef }) {
     if (!introComplete || !targetRef.current) return;
 
     // 1. Build input direction vector (reuse pre-allocated)
+    const keys = getKeys();
     const inputDir = _inputDir.current.set(0, 0, 0);
-    if (keys.current.right) inputDir.x += 1;
-    if (keys.current.left) inputDir.x -= 1;
-    if (keys.current.ascend) inputDir.y += 1;
-    if (keys.current.descend) inputDir.y -= 1;
-    if (keys.current.backward) inputDir.z += 1;
-    if (keys.current.forward) inputDir.z -= 1;
+    if (keys.right) inputDir.x += 1;
+    if (keys.left) inputDir.x -= 1;
+    if (keys.ascend) inputDir.y += 1;
+    if (keys.descend) inputDir.y -= 1;
+    if (keys.backward) inputDir.z += 1;
+    if (keys.forward) inputDir.z -= 1;
 
     if (inputDir.lengthSq() > 0) {
       inputDir.normalize();
@@ -80,7 +120,7 @@ export default function Controls({ targetRef }) {
     const localDir = _localDir.current.copy(inputDir).applyQuaternion(targetRef.current.quaternion);
     
     // 4. Add to velocity (apply warp boost if Shift is held)
-    const currentAccel = keys.current.boost ? ACCELERATION * 30 : ACCELERATION;
+    const currentAccel = keys.boost ? ACCELERATION * 30 : ACCELERATION;
     velocity.current.add(localDir.multiplyScalar(currentAccel));
 
     // 5. Apply damping
