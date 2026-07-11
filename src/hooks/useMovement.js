@@ -8,6 +8,7 @@ export function useMovement() {
     right: false,
     ascend: false,
     descend: false,
+    boost: false,
   });
 
   useEffect(() => {
@@ -36,6 +37,10 @@ export function useMovement() {
         case 'ControlRight':
         case 'KeyC':
           keys.current.descend = true;
+          break;
+        case 'ShiftLeft':
+        case 'ShiftRight':
+          keys.current.boost = true;
           break;
         default:
           break;
@@ -67,6 +72,10 @@ export function useMovement() {
         case 'ControlRight':
         case 'KeyC':
           keys.current.descend = false;
+          break;
+        case 'ShiftLeft':
+        case 'ShiftRight':
+          keys.current.boost = false;
           break;
         default:
           break;

@@ -10,7 +10,7 @@ export default function CinematicIntro({ targetRef }) {
   const setShowControlsHint = useStore((state) => state.setShowControlsHint);
   
   const timer = useRef(0);
-  const startPos = useRef(new THREE.Vector3(0, 5, 30));
+  const startPos = useRef(null);
 
   // Pre-allocated vectors to avoid GC pressure
   const _targetPos = useRef(new THREE.Vector3());
@@ -44,6 +44,10 @@ export default function CinematicIntro({ targetRef }) {
 
     // Intro camera animation (reuse pre-allocated vectors)
     targetRef.current.getWorldPosition(_targetPos.current);
+    
+    if (!startPos.current) {
+        startPos.current = new THREE.Vector3().copy(_targetPos.current).add(new THREE.Vector3(0, 5, 20));
+    }
     
     _finalOffset.current.set(0, 1.5, 5);
     _finalOffset.current.applyQuaternion(targetRef.current.quaternion);
