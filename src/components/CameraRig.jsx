@@ -1,17 +1,40 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 
 export default function CameraRig({ targetRef }) {
-  const { camera } = useThree();
+  const { camera, gl } = useThree();
   const introComplete = useStore((state) => state.introComplete);
   const lookAtVec = useRef(new THREE.Vector3());
+  const zoomDistance = useRef(5);
 
   // Pre-allocated vectors to avoid GC pressure in the render loop
   const _targetPos = useRef(new THREE.Vector3());
   const _idealOffset = useRef(new THREE.Vector3());
   const _idealLookAt = useRef(new THREE.Vector3());
+
+  // Listen for scroll events to adjust zoom
+  useEffect(() => {
+    const handleWheel = (e) => {
+      // e.deltaY is positive when scrolling down (zoom out), negative when scrolling up (zoom in)
+      const zoomSpeed = 0.01;
+      let newZoom = zoomDistance.current + e.deltaY * zoomSpeed;
+      
+      // Clamp zoom distance
+      newZoom = Math.max(2, Math.min(newZoom, 20));
+      
+      zoomDistance.current = newZoom;
+    };
+
+    // Attach to the canvas specifically so we don't interfere with standard DOM scrolling if any
+    const canvas = gl.domElement;
+    canvas.addEventListener('wheel', handleWheel, { passive: true });
+
+    return () => {
+      canvas.removeEventListener('wheel', handleWheel);
+    };
+  }, [gl.domElement]);
 
   useFrame((state, delta) => {
     if (!introComplete || !targetRef.current) return;
@@ -20,7 +43,9 @@ export default function CameraRig({ targetRef }) {
     targetRef.current.getWorldPosition(_targetPos.current);
 
     // 2. Define the ideal camera offset (behind and above)
-    _idealOffset.current.set(0, 1.5, 5);
+    // Scale height slightly as we zoom out
+    const heightOffset = 1.5 + (zoomDistance.current - 5) * 0.2;
+    _idealOffset.current.set(0, heightOffset, zoomDistance.current);
     _idealOffset.current.applyQuaternion(targetRef.current.quaternion);
     _idealOffset.current.add(_targetPos.current);
 
@@ -28,8 +53,6 @@ export default function CameraRig({ targetRef }) {
     camera.position.lerp(_idealOffset.current, 5 * delta);
 
     // 4. Smoothly interpolate lookAt target
-    _idealLookAt.current.copy(_targetPos.current).add(_idealLookAt.current.set(0, 1, 0));
-    // Fix: set idealLookAt properly
     _idealLookAt.current.set(
       _targetPos.current.x,
       _targetPos.current.y + 1,

@@ -10,4 +10,17 @@ export const useStore = create((set) => ({
 
   nearestPlanet: null,
   setNearestPlanet: (id) => set({ nearestPlanet: id }),
+
+  movement: {
+    forward: false,
+    backward: false,
+    left: false,
+    right: false,
+    ascend: false,
+    descend: false,
+    boost: false,
+  },
+  setMovement: (key, value) => set((state) => ({
+    movement: { ...state.movement, [key]: value }
+  })),
 }));

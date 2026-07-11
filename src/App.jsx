@@ -10,6 +10,8 @@ import ControlsHint from './ui/ControlsHint';
 import Minimap from './ui/Minimap';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
+import AudioEngine from './components/AudioEngine';
+import MobileControls from './ui/MobileControls';
 
 function App() {
   const astronautRef = useRef();
@@ -32,7 +34,7 @@ function App() {
         
         <MuseumSystem astronautRef={astronautRef} />
         
-        <Astronaut ref={astronautRef} position={[0, 0, 20]} />
+        <Astronaut ref={astronautRef} position={[40, 0, 60]} />
         <CameraRig targetRef={astronautRef} />
         <Controls targetRef={astronautRef} />
         <CinematicIntro targetRef={astronautRef} />
@@ -43,6 +45,8 @@ function App() {
     </Canvas>
     <ControlsHint />
     <Minimap astronautRef={astronautRef} />
+    <MobileControls />
+    <AudioEngine />
     </>
   );
 }

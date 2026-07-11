@@ -18,3 +18,107 @@ html, body, #root {
   color: var(--color-text);
   font-family: var(--font-primary);
 }
+
+/* --- Mobile Touch Controls --- */
+.mobile-controls-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none; /* Let touches pass through except on active zones */
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 40px;
+}
+
+.joystick-zone {
+  pointer-events: auto;
+  width: 150px;
+  height: 150px;
+  position: relative;
+}
+
+.joystick-base {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.joystick-knob {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  position: absolute;
+}
+
+.action-buttons-zone {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: flex-end;
+}
+
+.action-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.action-btn:active {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.action-btn.warp-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  background: rgba(255, 100, 100, 0.2);
+  border-color: rgba(255, 100, 100, 0.5);
+  margin-top: 10px;
+}
+
+.action-btn.warp-btn:active {
+  background: rgba(255, 100, 100, 0.6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .controls-hint {
+    display: none; /* Hide WASD hint on mobile */
+  }
+  
+  .minimap-container {
+    width: 120px;
+    height: 120px;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .mobile-controls-overlay {
+    padding: 20px;
+  }
+}

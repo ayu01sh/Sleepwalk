@@ -35,12 +35,13 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 
 | Module | What it does |
 |--------|-------------|
-| **Zero-Gravity Physics** | Experience smooth, momentum-based, 360-degree floating physics with your astronaut avatar |
-| **The Solar System Museum** | Tour 8 fully-textured planets arranged in a beautiful logarithmic spiral, illuminated by a custom-shaded glowing Sun |
-| **Diegetic UI** | Facts about planets and celestial bodies appear seamlessly within the 3D world as you approach them using Three.js HTML |
-| **Warp Travel** | Hold `Shift` to engage massive acceleration and traverse the vast distances between planets in seconds |
-| **Dynamic Minimap** | Track your position relative to the planets and the Sun with a glassmorphism radar overlay |
-| **Cinematic Rendering** | Built with custom GLSL shaders, physically-based materials, Unreal Bloom, and cinematic camera tracking |
+| **Zero-Gravity Physics** | Experience smooth, momentum-based, 360-degree floating physics with your astronaut avatar. |
+| **The Solar System Museum** | Tour all 8 fully-textured major planets in accurately sequenced orbits from the glowing Sun. |
+| **Dynamic Audio Engine** | Synthesized Web Audio API soundscapes featuring muffled standard thrusters and intense warp-drive acoustic feedback. |
+| **Mobile Responsiveness** | Seamlessly explore on touch-screens using a custom virtual joystick, swipe-to-look camera panning, and touch action buttons. |
+| **Diegetic UI** | Facts about planets and celestial bodies appear seamlessly within the 3D world as you approach them using Three.js HTML. |
+| **Warp Travel & Zoom** | Hold `Shift` (or Warp button) to traverse massive distances, and use the scroll wheel to zoom the camera dynamically. |
+| **Cinematic Rendering** | Built with custom GLSL shaders, physically-based materials, Unreal Bloom, and cinematic camera tracking. |
 
 ---
 
@@ -52,10 +53,10 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 │  React 18 · Vite · Zustand · React Three Fiber          │
 │                                                         │
 │  src/                                                   │
-│  ├── components/  (3D Models, Planets, Sun, Astronaut)  │
-│  ├── ui/          (Minimap, Info Panels, HTML Overlays) │
-│  ├── store/       (Global state, intro tracking)        │
-│  ├── data/        (Planet data, descriptions, positions)│
+│  ├── components/  (3D Models, Planets, Sun, AudioEngine)│
+│  ├── ui/          (Minimap, MobileControls, Info Panels)│
+│  ├── store/       (Global state, movement tracking)     │
+│  ├── hooks/       (useMovement, useProximity logic)     │
 │  └── App.jsx      (Main Canvas and Scene Composition)   │
 ├─────────────────────────────────────────────────────────┤
 │                     3D Engine                           │
@@ -72,9 +73,9 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 ### Design Decisions
 
 - **React Three Fiber**: Bridging the declarative nature of React with the imperative Three.js API allows us to build complex 3D scenes as reusable components (`<Earth />`, `<Sun />`).
-- **Zustand over Context**: Used for high-frequency state updates without triggering cascading React re-renders, especially crucial for 60FPS 3D rendering.
-- **Diegetic UI**: Information panels live inside the 3D world using `@react-three/drei`'s `<Html>` component. They calculate distance to the camera and fade in automatically.
-- **Custom Shaders**: The Sun uses a custom fractal noise vertex/fragment shader instead of a standard texture, providing a dynamic, boiling surface that interacts with post-processing bloom.
+- **Zustand over Context**: Used for high-frequency state updates (like movement vectors from the mobile joystick) without triggering cascading React re-renders, crucial for 60FPS.
+- **Synthesized Audio**: Using the native Web Audio API to synthesize thruster noises prevents the need to load heavy `.mp3` assets, ensuring instant playback.
+- **Custom Shaders**: The Sun uses a custom fractal noise vertex/fragment shader instead of a standard texture, providing a dynamic, boiling surface that interacts beautifully with post-processing bloom.
 
 ---
 
@@ -86,6 +87,7 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 | **3D Engine** | Three.js, React Three Fiber (R3F), `@react-three/drei` |
 | **State Management** | Zustand |
 | **Post-Processing** | `EffectComposer`, `UnrealBloomPass`, Custom Vignette Shader |
+| **Audio** | Native HTML5 Web Audio API |
 | **Styling** | Vanilla CSS, Glassmorphism techniques |
 
 ---
@@ -117,14 +119,17 @@ Sleepwalk runs at **http://localhost:5173**
 
 ## Controls
 
-| Action | Key/Input |
-| :--- | :--- |
-| **Look around** | Mouse Drag / Pointer Lock |
-| **Move Forward/Back** | `W` / `S` |
-| **Strafe Left/Right** | `A` / `D` |
-| **Ascend/Descend** | `Space` / `Ctrl` (or `C`) |
-| **Warp Travel (Boost)** | Hold `Shift` while moving |
-| **Toggle Minimap** | `M` |
+The game automatically adapts to desktop (Keyboard/Mouse) or mobile devices (Touch).
+
+| Action | Desktop | Mobile Touch |
+| :--- | :--- | :--- |
+| **Look around** | Mouse Drag / Pointer Lock | Swipe on empty screen space |
+| **Move Forward/Back** | `W` / `S` | Virtual Joystick (Left zone) |
+| **Strafe Left/Right** | `A` / `D` | Virtual Joystick (Left zone) |
+| **Ascend/Descend** | `Space` / `Ctrl` (or `C`) | `▲` / `▼` Action Buttons |
+| **Warp Travel (Boost)** | Hold `Shift` while moving | `WARP` Action Button |
+| **Camera Zoom** | Mouse Scroll Wheel | N/A |
+| **Toggle Minimap** | `M` | `M` |
 
 ---
 
@@ -133,9 +138,10 @@ Sleepwalk runs at **http://localhost:5173**
 Sleepwalk is being built in distinct cinematic phases:
 
 - [x] **Phase 1: Foundation & The Astronaut** - Zero-g controls, chase camera, cinematic intro, Earth, and basic post-processing.
-- [x] **Phase 2: The Solar System Museum** - All planets added, custom animated Sun shader, diegetic info panels, waypoint radar, and warp travel.
+- [x] **Phase 2: The Solar System Museum** - All 8 planets correctly sequenced, custom animated Sun shader, diegetic info panels, and minimap UI.
+- [x] **Phase 2.5: Immersion Update** - Real-time synthesized thruster audio engine and fully responsive touchscreen mobile controls.
 - [ ] **Phase 3: The Nebula Passage & Deep Space Gallery** - Volumetric dust fields and giant floating image monoliths pulling live data from NASA's APIs (Hubble/James Webb).
-- [ ] **Phase 4: The Black Hole & Final Polish** - A massive raymarched black hole with gravitational lensing, ambient dynamic audio soundscapes, and performance optimization.
+- [ ] **Phase 4: The Black Hole & Final Polish** - A massive raymarched black hole with gravitational lensing and performance optimization.
 
 ---
 
