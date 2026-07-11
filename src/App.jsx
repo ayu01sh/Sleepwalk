@@ -32,7 +32,7 @@ function App() {
         
         <MuseumSystem astronautRef={astronautRef} />
         
-        <Astronaut ref={astronautRef} position={[0, 0, -25]} />
+        <Astronaut ref={astronautRef} position={[0, 0, 20]} />
         <CameraRig targetRef={astronautRef} />
         <Controls targetRef={astronautRef} />
         <CinematicIntro targetRef={astronautRef} />

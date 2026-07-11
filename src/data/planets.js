@@ -3,7 +3,7 @@ export const planets = [
     id: 'mercury',
     name: 'Mercury',
     radius: 1.9,
-    position: [40, 0, -40], // Logarithmic spiral positioning
+    position: [20, 0, -20], // distance ~28
     textures: {
       albedo: '/textures/planets/2k_mercury.jpg',
     },
@@ -17,7 +17,7 @@ export const planets = [
     id: 'venus',
     name: 'Venus',
     radius: 4.7,
-    position: [70, 0, -10],
+    position: [40, 0, -40], // distance ~56
     textures: {
       albedo: '/textures/planets/2k_venus_surface.jpg',
     },
@@ -31,7 +31,7 @@ export const planets = [
     id: 'earth',
     name: 'Earth',
     radius: 5,
-    position: [0, 0, -30],
+    position: [80, 0, -40], // distance ~89
     textures: {},
     facts: {
       diameter: '12,742 km',
