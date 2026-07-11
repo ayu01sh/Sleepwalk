@@ -2,13 +2,14 @@ import { Canvas } from '@react-three/fiber';
 import { Suspense, useRef } from 'react';
 import * as THREE from 'three';
 import Starfield from './components/Starfield';
-import Earth from './components/Earth';
 import Astronaut from './components/Astronaut';
 import CameraRig from './components/CameraRig';
 import Controls from './components/Controls';
 import CinematicIntro from './components/CinematicIntro';
 import ControlsHint from './ui/ControlsHint';
+import Minimap from './ui/Minimap';
 import PostProcessing from './components/PostProcessing';
+import MuseumSystem from './components/MuseumSystem';
 
 function App() {
   const astronautRef = useRef();
@@ -27,18 +28,11 @@ function App() {
       <Suspense fallback={null}>
         <Starfield />
         
-        {/* Lighting Rig — sun positioned to illuminate Earth's camera-facing side */}
         <ambientLight intensity={0.12} />
-        <directionalLight
-          position={[-30, 15, -20]}
-          intensity={3.0}
-          color="#fff5e6"
-          castShadow={false}
-        />
         
-        <Earth />
+        <MuseumSystem astronautRef={astronautRef} />
         
-        <Astronaut ref={astronautRef} />
+        <Astronaut ref={astronautRef} position={[0, 0, -25]} />
         <CameraRig targetRef={astronautRef} />
         <Controls targetRef={astronautRef} />
         <CinematicIntro targetRef={astronautRef} />
@@ -48,6 +42,7 @@ function App() {
       </Suspense>
     </Canvas>
     <ControlsHint />
+    <Minimap astronautRef={astronautRef} />
     </>
   );
 }

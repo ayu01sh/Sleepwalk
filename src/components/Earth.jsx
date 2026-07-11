@@ -2,6 +2,9 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
+import InfoPanel from './InfoPanel';
+import Waypoint from './Waypoint';
+import { planets } from '../data/planets';
 
 const atmosphereVert = `
 varying vec3 vNormal;
@@ -52,8 +55,7 @@ export default function Earth() {
           map={albedoMap}
           normalMap={normalMap}
           normalScale={new THREE.Vector2(0.8, 0.8)}
-          roughnessMap={specularMap}
-          roughness={0.5}
+          roughness={0.6}
           emissiveMap={nightMap}
           emissive={new THREE.Color('#ffcc66')}
           emissiveIntensity={1.5}
@@ -66,9 +68,9 @@ export default function Earth() {
         <meshStandardMaterial 
           map={cloudsMap}
           transparent={true}
-          opacity={0.35}
+          opacity={0.8}
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
+          blending={THREE.NormalBlending}
         />
       </mesh>
 
@@ -84,6 +86,9 @@ export default function Earth() {
           depthWrite={false}
         />
       </mesh>
+
+      <InfoPanel planet={planets.find(p => p.id === 'earth')} />
+      <Waypoint planet={planets.find(p => p.id === 'earth')} />
     </group>
   );
 }

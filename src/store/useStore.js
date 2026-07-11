@@ -7,4 +7,7 @@ export const useStore = create((set) => ({
 
   showControlsHint: false,
   setShowControlsHint: (v) => set({ showControlsHint: v }),
+
+  nearestPlanet: null,
+  setNearestPlanet: (id) => set({ nearestPlanet: id }),
 }));

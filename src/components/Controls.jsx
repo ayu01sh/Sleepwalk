@@ -79,8 +79,9 @@ export default function Controls({ targetRef }) {
     // 3. Transform input direction to local space (reuse pre-allocated)
     const localDir = _localDir.current.copy(inputDir).applyQuaternion(targetRef.current.quaternion);
     
-    // 4. Add to velocity
-    velocity.current.add(localDir.multiplyScalar(ACCELERATION));
+    // 4. Add to velocity (apply warp boost if Shift is held)
+    const currentAccel = keys.current.boost ? ACCELERATION * 30 : ACCELERATION;
+    velocity.current.add(localDir.multiplyScalar(currentAccel));
 
     // 5. Apply damping
     velocity.current.multiplyScalar(DAMPING);
