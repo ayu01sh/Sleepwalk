@@ -1,6 +1,8 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useRef } from 'react';
+import { Suspense, useRef, useEffect } from 'react';
 import * as THREE from 'three';
+import { useStore } from './store/useStore';
+import { fetchGalleryImages } from './services/nasaApi';
 import Starfield from './components/Starfield';
 import Astronaut from './components/Astronaut';
 import CameraRig from './components/CameraRig';
@@ -10,11 +12,21 @@ import ControlsHint from './ui/ControlsHint';
 import Minimap from './ui/Minimap';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
+import NebulaCloud from './components/NebulaCloud';
+import MonolithGallery from './components/MonolithGallery';
 import AudioEngine from './components/AudioEngine';
 import MobileControls from './ui/MobileControls';
+import WaypointHUD from './ui/WaypointHUD';
 
 function App() {
   const astronautRef = useRef();
+
+  useEffect(() => {
+    fetchGalleryImages().then(images => {
+      useStore.getState().setNasaImages(images);
+      useStore.getState().setNasaImagesLoaded(true);
+    });
+  }, []);
   
   return (
     <>
@@ -33,6 +45,8 @@ function App() {
         <ambientLight intensity={0.12} />
         
         <MuseumSystem astronautRef={astronautRef} />
+        <NebulaCloud />
+        <MonolithGallery />
         
         <Astronaut ref={astronautRef} position={[40, 0, 60]} />
         <CameraRig targetRef={astronautRef} />
@@ -43,6 +57,7 @@ function App() {
         
       </Suspense>
     </Canvas>
+    <WaypointHUD astronautRef={astronautRef} />
     <ControlsHint />
     <Minimap astronautRef={astronautRef} />
     <MobileControls />

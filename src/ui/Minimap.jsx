@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { planets } from '../data/planets';
+import { NEBULA_CENTER, NEBULA_RADIUS, monoliths } from '../data/nebulaData';
 
 const MAP_SIZE = 200; // pixels
 const WORLD_SCALE = 1500; // how much world space fits in the map
@@ -82,6 +83,45 @@ export default function Minimap({ astronautRef }) {
             background: 'rgba(255, 255, 255, 0.5)',
             borderRadius: '50%',
             transform: 'translate(-50%, -50%)'
+          }} />
+        );
+      })}
+
+      {/* Nebula Region */}
+      {(() => {
+        const nx = (NEBULA_CENTER[0] / WORLD_SCALE) * MAP_SIZE + (MAP_SIZE / 2);
+        const ny = (NEBULA_CENTER[2] / WORLD_SCALE) * MAP_SIZE + (MAP_SIZE / 2);
+        const nSize = (NEBULA_RADIUS / WORLD_SCALE) * MAP_SIZE * 2;
+        
+        return (
+          <div style={{
+            position: 'absolute',
+            left: `${nx}px`,
+            top: `${ny}px`,
+            width: `${nSize}px`, height: `${nSize}px`,
+            background: 'radial-gradient(circle, rgba(79, 195, 247, 0.15) 0%, rgba(129, 5, 65, 0.05) 100%)',
+            border: '1px dashed rgba(79, 195, 247, 0.3)',
+            borderRadius: '50%',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none'
+          }} />
+        );
+      })()}
+
+      {/* Monoliths */}
+      {monoliths.map(monolith => {
+        const px = (monolith.position[0] / WORLD_SCALE) * MAP_SIZE + (MAP_SIZE / 2);
+        const py = (monolith.position[2] / WORLD_SCALE) * MAP_SIZE + (MAP_SIZE / 2);
+        
+        return (
+          <div key={monolith.id} style={{
+            position: 'absolute',
+            left: `${px}px`,
+            top: `${py}px`,
+            width: '4px', height: '4px',
+            background: '#00e5ff',
+            transform: 'translate(-50%, -50%) rotate(45deg)',
+            boxShadow: '0 0 5px #00e5ff'
           }} />
         );
       })}

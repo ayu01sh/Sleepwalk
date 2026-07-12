@@ -1,10 +1,11 @@
 import { useThree, useFrame } from '@react-three/fiber';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { useStore } from '../store/useStore';
 
 // Simple vignette shader
 const VignetteShader = {
@@ -37,8 +38,9 @@ const VignetteShader = {
 
 export default function PostProcessing() {
   const { gl, scene, camera, size } = useThree();
+  const inNebulaZone = useStore(state => state.inNebulaZone);
 
-  const composer = useMemo(() => {
+  const { composer, bloomPass } = useMemo(() => {
     const comp = new EffectComposer(gl);
     comp.setSize(size.width, size.height);
 
@@ -60,7 +62,7 @@ export default function PostProcessing() {
     vignettePass.renderToScreen = true;
     comp.addPass(vignettePass);
 
-    return comp;
+    return { composer: comp, bloomPass };
   }, [gl, scene, camera]);
 
   // Handle resize
@@ -69,7 +71,14 @@ export default function PostProcessing() {
   }, [composer, size]);
 
   // Override the default render loop
-  useFrame(() => {
+  useFrame((state, delta) => {
+    if (bloomPass) {
+      const targetStrength = inNebulaZone ? 1.5 : 1.0;
+      const targetThreshold = inNebulaZone ? 0.6 : 0.85;
+      
+      bloomPass.strength = THREE.MathUtils.lerp(bloomPass.strength, targetStrength, 2 * delta);
+      bloomPass.threshold = THREE.MathUtils.lerp(bloomPass.threshold, targetThreshold, 2 * delta);
+    }
     composer.render();
   }, 1); // priority 1 = runs after default render
 

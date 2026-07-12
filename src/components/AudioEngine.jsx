@@ -3,6 +3,7 @@ import { useStore } from '../store/useStore';
 
 export default function AudioEngine() {
   const introComplete = useStore(state => state.introComplete);
+  const inNebulaZone = useStore(state => state.inNebulaZone);
   const audioCtxRef = useRef(null);
   
   // Audio nodes
@@ -17,7 +18,38 @@ export default function AudioEngine() {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     audioCtxRef.current = ctx;
 
-    // No ambient music, just thrusters
+    // --- 1. Ambient Drone (Nebula) ---
+    const droneGain = ctx.createGain();
+    droneGain.gain.value = 0; // start silent
+    droneGain.connect(ctx.destination);
+    droneGainRef.current = droneGain;
+
+    const osc1 = ctx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.value = 55; // Low A
+    
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.value = 82.41; // Low E
+
+    // LFO for pulsing
+    const lfo = ctx.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = 0.1; // 10 second cycle
+
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 0.5;
+    
+    // Connect LFO to gain's gain parameter
+    lfo.connect(lfoGain.gain);
+
+    osc1.connect(lfoGain);
+    osc2.connect(lfoGain);
+    lfoGain.connect(droneGain);
+
+    osc1.start();
+    osc2.start();
+    lfo.start();
 
     // --- 2. Thruster Noise (Filtered White Noise) ---
     const bufferSize = ctx.sampleRate * 2; // 2 seconds of noise
@@ -49,6 +81,19 @@ export default function AudioEngine() {
       ctx.close();
     };
   }, [introComplete]);
+
+  // Hook for Nebula Drone fade in/out
+  useEffect(() => {
+    if (!audioCtxRef.current || !droneGainRef.current) return;
+    const ctx = audioCtxRef.current;
+    const t = ctx.currentTime;
+    
+    if (inNebulaZone) {
+      droneGainRef.current.gain.setTargetAtTime(0.4, t, 2.0); // Slow fade in
+    } else {
+      droneGainRef.current.gain.setTargetAtTime(0, t, 2.0); // Slow fade out
+    }
+  }, [inNebulaZone]);
 
   // Hook into keyboard events to trigger thruster sounds
   useEffect(() => {
