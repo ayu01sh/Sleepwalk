@@ -40,6 +40,7 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 | **Dynamic Audio Engine** | Synthesized Web Audio API soundscapes featuring muffled standard thrusters and intense warp-drive acoustic feedback. |
 | **Mobile Responsiveness** | Seamlessly explore on touch-screens using a custom virtual joystick, swipe-to-look camera panning, and touch action buttons. |
 | **Diegetic UI** | Facts about planets and celestial bodies appear seamlessly within the 3D world as you approach them using Three.js HTML. |
+| **Deep Space Gallery** | Traverse a volumetric procedural nebula to discover 17 massive monoliths displaying real-time imagery from the NASA APOD API. |
 | **Warp Travel & Zoom** | Hold `Shift` (or Warp button) to traverse massive distances, and use the scroll wheel to zoom the camera dynamically. |
 | **Cinematic Rendering** | Built with custom GLSL shaders, physically-based materials, Unreal Bloom, and cinematic camera tracking. |
 
@@ -53,8 +54,8 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 │  React 18 · Vite · Zustand · React Three Fiber          │
 │                                                         │
 │  src/                                                   │
-│  ├── components/  (3D Models, Planets, Sun, AudioEngine)│
-│  ├── ui/          (Minimap, MobileControls, Info Panels)│
+│  ├── components/  (3D Models, Planets, NavigationArrow) │
+│  ├── ui/          (MobileControls, Info Panels)         │
 │  ├── store/       (Global state, movement tracking)     │
 │  ├── hooks/       (useMovement, useProximity logic)     │
 │  └── App.jsx      (Main Canvas and Scene Composition)   │
@@ -128,8 +129,7 @@ The game automatically adapts to desktop (Keyboard/Mouse) or mobile devices (Tou
 | **Strafe Left/Right** | `A` / `D` | Virtual Joystick (Left zone) |
 | **Ascend/Descend** | `Space` / `Ctrl` (or `C`) | `▲` / `▼` Action Buttons |
 | **Warp Travel (Boost)** | Hold `Shift` while moving | `WARP` Action Button |
-| **Camera Zoom** | Mouse Scroll Wheel | N/A |
-| **Toggle Minimap** | `M` | `M` |
+| **Navigation HUD** | 3D Arrow | N/A |
 
 ---
 
@@ -140,7 +140,7 @@ Sleepwalk is being built in distinct cinematic phases:
 - [x] **Phase 1: Foundation & The Astronaut** - Zero-g controls, chase camera, cinematic intro, Earth, and basic post-processing.
 - [x] **Phase 2: The Solar System Museum** - All 8 planets correctly sequenced, custom animated Sun shader, diegetic info panels, and minimap UI.
 - [x] **Phase 2.5: Immersion Update** - Real-time synthesized thruster audio engine and fully responsive touchscreen mobile controls.
-- [ ] **Phase 3: The Nebula Passage & Deep Space Gallery** - Volumetric dust fields and giant floating image monoliths pulling live data from NASA's APIs (Hubble/James Webb).
+- [x] **Phase 3: The Nebula Passage & Deep Space Gallery** - Volumetric dust fields and giant floating image monoliths pulling live data from NASA's APIs (Hubble/James Webb).
 - [ ] **Phase 4: The Black Hole & Final Polish** - A massive raymarched black hole with gravitational lensing and performance optimization.
 
 ---

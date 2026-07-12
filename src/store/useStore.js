@@ -23,4 +23,22 @@ export const useStore = create((set) => ({
   setMovement: (key, value) => set((state) => ({
     movement: { ...state.movement, [key]: value }
   })),
+
+  // Nebula region awareness
+  inNebulaZone: false,
+  setInNebulaZone: (v) => set({ inNebulaZone: v }),
+
+  // Monolith gallery state
+  activeMonolith: null,
+  setActiveMonolith: (id) => set({ activeMonolith: id }),
+
+  // NASA image cache
+  nasaImages: [],
+  setNasaImages: (imgs) => set({ nasaImages: imgs }),
+  nasaImagesLoaded: false,
+  setNasaImagesLoaded: (v) => set({ nasaImagesLoaded: v }),
+
+  // Waypoint targeting
+  targetWaypoint: null,
+  setTargetWaypoint: (wp) => set({ targetWaypoint: wp }),
 }));
