@@ -57,7 +57,7 @@ export default function NavigationArrow({ astronautRef }) {
   return (
     <group ref={arrowGroup}>
       {/* HUD Arrow: unlit (meshBasicMaterial) so it doesn't get affected by Bloom or shadows */}
-      <group scale={[0.2, 0.2, 0.2]}>
+      <group scale={[0.1, 0.1, 0.1]}>
         {/* Shaft */}
         <mesh position={[0, 0, -0.6]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.06, 0.06, 0.8, 8]} />
@@ -67,7 +67,7 @@ export default function NavigationArrow({ astronautRef }) {
         {/* Tip */}
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <coneGeometry args={[0.2, 0.5, 8]} />
-          <meshBasicMaterial color="#00e5ff" />
+          <meshBasicMaterial color="#ff3333" />
         </mesh>
       </group>
     </group>
