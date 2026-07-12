@@ -4,10 +4,15 @@ import { Html, Edges } from '@react-three/drei';
 import * as THREE from 'three';
 import { useStore } from '../store/useStore';
 
+// Create a tiny 1x1 black texture so the shader compiles with texture support
+const defaultTex = new THREE.DataTexture(new Uint8Array([0,0,0,255]), 1, 1, THREE.RGBAFormat);
+defaultTex.needsUpdate = true;
+defaultTex.colorSpace = THREE.SRGBColorSpace;
+
 export default function Monolith({ data, imageData }) {
   const meshRef = useRef();
   const groupRef = useRef();
-  const [texture, setTexture] = useState(null);
+  const [texture, setTexture] = useState(defaultTex);
   
   const activeMonolith = useStore(state => state.activeMonolith);
   const isVisible = activeMonolith === data.id;

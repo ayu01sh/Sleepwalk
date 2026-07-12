@@ -41,4 +41,8 @@ export const useStore = create((set) => ({
   // Waypoint targeting
   targetWaypoint: null,
   setTargetWaypoint: (wp) => set({ targetWaypoint: wp }),
+
+  // Performance Quality
+  quality: 'high', // 'high' or 'low'
+  setQuality: (q) => set({ quality: q }),
 }));
