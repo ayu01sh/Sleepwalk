@@ -4,22 +4,23 @@ import { NEBULA_CENTER } from '../data/nebulaData';
 export default function Starfield() {
   return (
     <>
-      <Stars 
-        radius={300} 
-        depth={100} 
-        count={8000} 
-        factor={4} 
-        saturation={0} 
-        fade 
-        speed={0.5} 
-      />
-      
-      {/* Nebula deep space layer */}
-      <group position={NEBULA_CENTER}>
+      {/* Universal Starfield covering the entire map (Sun to Black Hole) */}
+      <group position={[1500, 0, 1500]}>
+        {/* Core stars filling the entire volume */}
         <Stars 
-          radius={600} 
-          depth={200} 
-          count={12000} 
+          radius={50} 
+          depth={6000} 
+          count={80000} 
+          factor={4} 
+          saturation={0} 
+          fade 
+          speed={0.5} 
+        />
+        {/* Colorful deep space background stars mixed throughout */}
+        <Stars 
+          radius={50} 
+          depth={6000} 
+          count={30000} 
           factor={6} 
           saturation={0.8} 
           fade 
@@ -28,7 +29,7 @@ export default function Starfield() {
       </group>
 
       {/* Basic dark background */}
-      <color attach="background" args={['#000008']} />
+      <color attach="background" args={['#000005']} />
     </>
   );
 }

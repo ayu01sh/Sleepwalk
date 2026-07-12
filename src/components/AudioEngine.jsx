@@ -1,7 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useStore } from '../store/useStore';
+import * as THREE from 'three';
+import { BLACK_HOLE_POSITION } from './BlackHole';
 
-export default function AudioEngine() {
+export default function AudioEngine({ astronautRef }) {
   const introComplete = useStore(state => state.introComplete);
   const inNebulaZone = useStore(state => state.inNebulaZone);
   const audioCtxRef = useRef(null);
@@ -10,6 +12,11 @@ export default function AudioEngine() {
   const droneGainRef = useRef(null);
   const thrusterFilterRef = useRef(null);
   const thrusterGainRef = useRef(null);
+  
+  // Black Hole nodes
+  const bhDroneGainRef = useRef(null);
+  const bhOscRef = useRef(null);
+  const bhDistortionRef = useRef(null);
 
   useEffect(() => {
     // Only start audio after intro is complete (requires user interaction to start audio context)
@@ -77,6 +84,37 @@ export default function AudioEngine() {
     thrusterFilter.connect(thrusterGain);
     noiseSource.start();
 
+    // --- 3. Black Hole Drone (Dynamic) ---
+    const bhGain = ctx.createGain();
+    bhGain.gain.value = 0; // Start silent
+    bhGain.connect(ctx.destination);
+    bhDroneGainRef.current = bhGain;
+
+    const bhDistortion = ctx.createWaveShaper();
+    // Create a distortion curve
+    const makeDistortionCurve = (amount) => {
+      const k = typeof amount === 'number' ? amount : 50,
+        n_samples = 44100,
+        curve = new Float32Array(n_samples),
+        deg = Math.PI / 180;
+      for (let i = 0; i < n_samples; ++i) {
+        const x = i * 2 / n_samples - 1;
+        curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+      }
+      return curve;
+    };
+    bhDistortion.curve = makeDistortionCurve(0); // Start with 0 distortion
+    bhDistortion.oversample = '4x';
+    bhDistortion.connect(bhGain);
+    bhDistortionRef.current = bhDistortion;
+
+    const bhOsc = ctx.createOscillator();
+    bhOsc.type = 'sawtooth';
+    bhOsc.frequency.value = 100; 
+    bhOsc.connect(bhDistortion);
+    bhOsc.start();
+    bhOscRef.current = bhOsc;
+
     return () => {
       ctx.close();
     };
@@ -143,6 +181,46 @@ export default function AudioEngine() {
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [introComplete]);
+
+  // Hook for Black Hole dynamic proximity audio
+  useEffect(() => {
+    if (!introComplete || !audioCtxRef.current) return;
+
+    const bhPos = new THREE.Vector3(...BLACK_HOLE_POSITION);
+    let animationFrameId;
+
+    const updateBlackHoleAudio = () => {
+      if (astronautRef?.current && bhDroneGainRef.current && bhOscRef.current && bhDistortionRef.current) {
+        const dist = astronautRef.current.position.distanceTo(bhPos);
+        const maxDist = 2000;
+        
+        if (dist < maxDist) {
+          // Closer = more volume, lower pitch, more distortion
+          const normalizedDist = dist / maxDist; // 0 (at BH) to 1 (far away)
+          const intensity = 1.0 - normalizedDist; // 1 (at BH) to 0 (far away)
+          
+          // Smoothly ramp audio params to prevent clipping/clicking
+          const t = audioCtxRef.current.currentTime;
+          
+          // Volume: exponential curve for dramatic effect
+          const targetVol = Math.pow(intensity, 2) * 0.8; 
+          bhDroneGainRef.current.gain.setTargetAtTime(targetVol, t, 0.1);
+          
+          // Pitch: drops lower as you get closer
+          const targetFreq = 100 - (intensity * 60); // Drops from 100Hz to 40Hz
+          bhOscRef.current.frequency.setTargetAtTime(targetFreq, t, 0.1);
+          
+        } else {
+          bhDroneGainRef.current.gain.setTargetAtTime(0, audioCtxRef.current.currentTime, 0.5);
+        }
+      }
+      animationFrameId = requestAnimationFrame(updateBlackHoleAudio);
+    };
+
+    updateBlackHoleAudio();
+
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [introComplete, astronautRef]);
 
   return null;
 }

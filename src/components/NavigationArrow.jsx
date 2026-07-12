@@ -3,6 +3,7 @@ import { useThree, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { planets } from '../data/planets';
 import { monoliths } from '../data/nebulaData';
+import { BLACK_HOLE_POSITION } from './BlackHole';
 
 export default function NavigationArrow({ astronautRef }) {
   const arrowGroup = useRef();
@@ -17,6 +18,7 @@ export default function NavigationArrow({ astronautRef }) {
     monoliths.forEach(m => {
       list.push(new THREE.Vector3(...m.position));
     });
+    list.push(new THREE.Vector3(...BLACK_HOLE_POSITION));
     return list;
   }, []);
 

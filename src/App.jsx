@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { Suspense, useRef, useEffect } from 'react';
+import { AdaptiveDpr } from '@react-three/drei';
 import * as THREE from 'three';
 import { useStore } from './store/useStore';
 import { fetchGalleryImages } from './services/nasaApi';
@@ -13,12 +14,15 @@ import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
 import NebulaCloud from './components/NebulaCloud';
 import MonolithGallery from './components/MonolithGallery';
+import BlackHole from './components/BlackHole';
 import AudioEngine from './components/AudioEngine';
 import MobileControls from './ui/MobileControls';
 import WaypointHUD from './ui/WaypointHUD';
+import QualityToggle from './ui/QualityToggle';
 
 function App() {
   const astronautRef = useRef();
+  const quality = useStore(state => state.quality);
 
   useEffect(() => {
     fetchGalleryImages().then(images => {
@@ -46,20 +50,24 @@ function App() {
         <MuseumSystem astronautRef={astronautRef} />
         <NebulaCloud />
         <MonolithGallery />
+        <BlackHole />
         
         <Astronaut ref={astronautRef} position={[40, 0, 60]} />
         <CameraRig targetRef={astronautRef} />
         <Controls targetRef={astronautRef} />
         <CinematicIntro targetRef={astronautRef} />
         
-        <PostProcessing />
+        {quality === 'high' && <PostProcessing />}
+        <AdaptiveDpr pixelated />
+        
         <NavigationArrow astronautRef={astronautRef} />
         
       </Suspense>
     </Canvas>
     <WaypointHUD astronautRef={astronautRef} />
+    <QualityToggle />
     <MobileControls />
-    <AudioEngine />
+    <AudioEngine astronautRef={astronautRef} />
     </>
   );
 }
