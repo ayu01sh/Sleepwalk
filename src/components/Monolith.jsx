@@ -96,7 +96,14 @@ export default function Monolith({ data, imageData }) {
           emissiveIntensity={isVisible ? 1.2 : 0.4}
           toneMapped={false}
         />
-        <meshStandardMaterial attach="material-5" color="#0a0a0f" metalness={0.9} roughness={0.1} />
+        <meshStandardMaterial 
+          attach="material-5" 
+          map={texture} 
+          emissiveMap={texture}
+          emissive="#ffffff"
+          emissiveIntensity={isVisible ? 1.2 : 0.4}
+          toneMapped={false}
+        />
       </mesh>
 
       {/* Info Panel */}

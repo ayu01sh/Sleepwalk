@@ -8,8 +8,7 @@ import Astronaut from './components/Astronaut';
 import CameraRig from './components/CameraRig';
 import Controls from './components/Controls';
 import CinematicIntro from './components/CinematicIntro';
-import ControlsHint from './ui/ControlsHint';
-import Minimap from './ui/Minimap';
+import NavigationArrow from './components/NavigationArrow';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
 import NebulaCloud from './components/NebulaCloud';
@@ -54,12 +53,11 @@ function App() {
         <CinematicIntro targetRef={astronautRef} />
         
         <PostProcessing />
+        <NavigationArrow astronautRef={astronautRef} />
         
       </Suspense>
     </Canvas>
     <WaypointHUD astronautRef={astronautRef} />
-    <ControlsHint />
-    <Minimap astronautRef={astronautRef} />
     <MobileControls />
     <AudioEngine />
     </>
