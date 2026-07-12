@@ -54,8 +54,8 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 │  React 18 · Vite · Zustand · React Three Fiber          │
 │                                                         │
 │  src/                                                   │
-│  ├── components/  (3D Models, Planets, Sun, AudioEngine)│
-│  ├── ui/          (Minimap, MobileControls, Info Panels)│
+│  ├── components/  (3D Models, Planets, NavigationArrow) │
+│  ├── ui/          (MobileControls, Info Panels)         │
 │  ├── store/       (Global state, movement tracking)     │
 │  ├── hooks/       (useMovement, useProximity logic)     │
 │  └── App.jsx      (Main Canvas and Scene Composition)   │
@@ -129,8 +129,7 @@ The game automatically adapts to desktop (Keyboard/Mouse) or mobile devices (Tou
 | **Strafe Left/Right** | `A` / `D` | Virtual Joystick (Left zone) |
 | **Ascend/Descend** | `Space` / `Ctrl` (or `C`) | `▲` / `▼` Action Buttons |
 | **Warp Travel (Boost)** | Hold `Shift` while moving | `WARP` Action Button |
-| **Camera Zoom** | Mouse Scroll Wheel | N/A |
-| **Toggle Minimap** | `M` | `M` |
+| **Navigation HUD** | 3D Arrow | N/A |
 
 ---
 
