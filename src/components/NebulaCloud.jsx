@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { NEBULA_CENTER, NEBULA_RADIUS } from '../data/nebulaData';
 
-const PARTICLE_COUNT = 12000;
+const PARTICLE_COUNT = 24000;
 
 // Inline shaders for Points-based particles
 const vertexShader = `
@@ -63,12 +63,16 @@ export default function NebulaCloud() {
     const scales = new Float32Array(PARTICLE_COUNT);
     const alphas = new Float32Array(PARTICLE_COUNT);
 
+    // Expanded vibrant color palette for a hyper-colorful nebula
     const colorPalette = [
-      new THREE.Color('#6a1b9a'), // Vibrant Purple
+      new THREE.Color('#6a1b9a'), // Deep Purple
       new THREE.Color('#d81b60'), // Vibrant Magenta
-      new THREE.Color('#00bcd4'), // Vibrant Cyan
-      new THREE.Color('#ff8f00'), // Vibrant Orange
-      new THREE.Color('#283593'), // Vibrant Blue
+      new THREE.Color('#00e5ff'), // Neon Cyan
+      new THREE.Color('#ff3366'), // Hot Pink
+      new THREE.Color('#ffcc00'), // Bright Yellow/Gold
+      new THREE.Color('#39ff14'), // Neon Green
+      new THREE.Color('#7c4dff'), // Electric Violet
+      new THREE.Color('#1e88e5'), // Bright Blue
     ];
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
@@ -92,7 +96,7 @@ export default function NebulaCloud() {
       colors[i * 3 + 2] = color.b;
 
       scales[i] = 15 + Math.random() * 35;
-      alphas[i] = 0.05 + Math.random() * 0.15;
+      alphas[i] = 0.15 + Math.random() * 0.25;
     }
 
     geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));

@@ -1,4 +1,4 @@
-const NASA_API_KEY = 'vw3eIZq5zQ0vSAHxT6Y5gdOlA7y03FEZLhMdMNk5';
+const NASA_API_KEY = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
 
 // CORS-friendly space images from Unsplash (these always work as WebGL textures)
 const corsImages = [
@@ -51,7 +51,7 @@ const fallbackImages = [
 
 export async function fetchGalleryImages() {
   try {
-    const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}&count=20`);
+    const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}&count=60`);
     
     if (!response.ok) {
       console.warn('NASA API fetch failed, using fallback images.', response.status);
@@ -73,10 +73,10 @@ export async function fetchGalleryImages() {
       return isValidImageUrl(imgUrl);
     });
     
-    if (imageResults.length >= 17) {
+    if (imageResults.length >= 50) {
       // Use NASA metadata (title, explanation, date) but pair with CORS-safe images
       // This gives us real NASA descriptions while ensuring textures always load
-      return imageResults.slice(0, 17).map((img, i) => ({
+      return imageResults.slice(0, 50).map((img, i) => ({
         title: img.title,
         url: corsImages[i % corsImages.length],
         explanation: img.explanation,
@@ -84,9 +84,9 @@ export async function fetchGalleryImages() {
       }));
     } else {
       console.warn('Not enough valid image results from NASA API, using fallbacks.');
-      // Make sure fallback provides at least 17 by repeating if necessary
+      // Make sure fallback provides at least 50 by repeating if necessary
       const fullFallback = [];
-      for(let i=0; i<17; i++) {
+      for(let i=0; i<50; i++) {
         fullFallback.push(fallbackImages[i % fallbackImages.length]);
       }
       return fullFallback;
@@ -94,7 +94,7 @@ export async function fetchGalleryImages() {
   } catch (error) {
     console.error('Error fetching from NASA API:', error);
     const fullFallback = [];
-    for(let i=0; i<17; i++) {
+    for(let i=0; i<50; i++) {
       fullFallback.push(fallbackImages[i % fallbackImages.length]);
     }
     return fullFallback;
