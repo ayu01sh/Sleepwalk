@@ -119,6 +119,15 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowColor = '#ff0000';
       ctx.shadowBlur = 5;
       ctx.fill();
+      
+      // Draw ISRO Spaceship (Z = 2000)
+      const isroPos = worldToMinimap(playerPos, { x: 0, z: 2000 });
+      ctx.beginPath();
+      ctx.arc(cx + isroPos.x, cy + isroPos.y, isroPos.clamped ? 2 : 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#ff9933'; // Saffron orange
+      ctx.shadowColor = '#ff9933';
+      ctx.shadowBlur = 4;
+      ctx.fill();
       ctx.shadowBlur = 0; // reset
 
       // Draw Player (Center)

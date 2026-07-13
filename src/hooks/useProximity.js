@@ -34,6 +34,14 @@ export function useProximity(targetRef) {
       }
     }
 
+    // Check ISRO Spaceship proximity
+    const isroPos = new THREE.Vector3(0, 0, 2000);
+    const isroDist = astronautPos.current.distanceTo(isroPos) - 15; // 15 is roughly the scale/radius
+    if (isroDist < PROXIMITY_THRESHOLD && isroDist < minDistance) {
+      closestPlanet = 'isro-spaceship';
+      minDistance = isroDist;
+    }
+
     if (currentNearest.current !== closestPlanet) {
       currentNearest.current = closestPlanet;
       setNearestPlanet(closestPlanet);

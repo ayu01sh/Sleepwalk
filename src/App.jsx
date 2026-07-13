@@ -60,7 +60,7 @@ function App() {
         <MonolithGallery />
         <BlackHole />
         
-        <Astronaut ref={astronautRef} position={[40, 0, 60]} />
+        <Astronaut ref={astronautRef} position={[0, 30, 2100]} />
         <CameraRig targetRef={astronautRef} />
         <Controls targetRef={astronautRef} />
         <CinematicIntro targetRef={astronautRef} />
