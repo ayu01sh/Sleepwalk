@@ -3,11 +3,22 @@ export const NEBULA_CENTER = [1610, 35, 1565];
 export const NEBULA_RADIUS = 800;          // Increased radius of the particle cloud
 export const NEBULA_ENTRY_THRESHOLD = 500; // Distance at which nebula "fog" begins
 
+// Mulberry32 seeded PRNG — deterministic positions across sessions
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+const seededRandom = mulberry32(42);
+
 // Procedurally generate 50 monoliths scattered within the nebula volume
 export const monoliths = Array.from({ length: 50 }, (_, i) => {
-  const r = NEBULA_RADIUS * Math.cbrt(Math.random());
-  const theta = Math.random() * 2.0 * Math.PI;
-  const phi = Math.acos(2.0 * Math.random() - 1.0);
+  const r = NEBULA_RADIUS * Math.cbrt(seededRandom());
+  const theta = seededRandom() * 2.0 * Math.PI;
+  const phi = Math.acos(2.0 * seededRandom() - 1.0);
   
   // Flatten the Y distribution slightly to match the nebula shape
   const x = r * Math.sin(phi) * Math.cos(theta);
@@ -17,8 +28,8 @@ export const monoliths = Array.from({ length: 50 }, (_, i) => {
   return {
     id: `monolith-${i + 1}`,
     position: [NEBULA_CENTER[0] + x, NEBULA_CENTER[1] + y, NEBULA_CENTER[2] + z],
-    rotation: [0, Math.random() * Math.PI * 2, (Math.random() - 0.5) * 0.2],
-    scale: [10 + Math.random() * 8, 16 + Math.random() * 10, 0.8]
+    rotation: [0, seededRandom() * Math.PI * 2, (seededRandom() - 0.5) * 0.2],
+    scale: [10 + seededRandom() * 8, 16 + seededRandom() * 10, 0.8]
   };
 });
 

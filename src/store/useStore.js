@@ -45,4 +45,8 @@ export const useStore = create((set) => ({
   // Performance Quality
   quality: 'high', // 'high' or 'low'
   setQuality: (q) => set({ quality: q }),
+
+  // Camera ref for DOM-side components
+  camera: null,
+  setCamera: (cam) => set({ camera: cam }),
 }));

@@ -2,8 +2,7 @@ import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { NEBULA_CENTER, NEBULA_RADIUS } from '../data/nebulaData';
-
-const PARTICLE_COUNT = 24000;
+import { useStore } from '../store/useStore';
 
 // Inline shaders for Points-based particles
 const vertexShader = `
@@ -55,13 +54,16 @@ const fragmentShader = `
 export default function NebulaCloud() {
   const pointsRef = useRef();
   const materialRef = useRef();
+  
+  const quality = useStore(state => state.quality);
+  const particleCount = quality === 'high' ? 24000 : 8000;
 
   const geometry = useMemo(() => {
     const geo = new THREE.BufferGeometry();
-    const positions = new Float32Array(PARTICLE_COUNT * 3);
-    const colors = new Float32Array(PARTICLE_COUNT * 3);
-    const scales = new Float32Array(PARTICLE_COUNT);
-    const alphas = new Float32Array(PARTICLE_COUNT);
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const scales = new Float32Array(particleCount);
+    const alphas = new Float32Array(particleCount);
 
     // Expanded vibrant color palette for a hyper-colorful nebula
     const colorPalette = [
@@ -75,7 +77,7 @@ export default function NebulaCloud() {
       new THREE.Color('#1e88e5'), // Bright Blue
     ];
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
+    for (let i = 0; i < particleCount; i++) {
       const u = Math.random();
       const v = Math.random();
       const theta = u * 2.0 * Math.PI;
@@ -105,7 +107,7 @@ export default function NebulaCloud() {
     geo.setAttribute('instanceAlpha', new THREE.BufferAttribute(alphas, 1));
 
     return geo;
-  }, []);
+  }, [particleCount]);
 
   useFrame(({ clock }) => {
     if (materialRef.current) {

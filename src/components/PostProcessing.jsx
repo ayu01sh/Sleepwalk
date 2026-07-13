@@ -39,6 +39,7 @@ const VignetteShader = {
 export default function PostProcessing() {
   const { gl, scene, camera, size } = useThree();
   const inNebulaZone = useStore(state => state.inNebulaZone);
+  const quality = useStore(state => state.quality);
 
   const { composer, bloomPass } = useMemo(() => {
     const comp = new EffectComposer(gl);
@@ -49,8 +50,12 @@ export default function PostProcessing() {
     comp.addPass(renderPass);
 
     // 2. Bloom
+    const bloomRes = quality === 'high' 
+      ? new THREE.Vector2(size.width, size.height) 
+      : new THREE.Vector2(size.width / 2, size.height / 2);
+      
     const bloomPass = new UnrealBloomPass(
-      new THREE.Vector2(size.width, size.height),
+      bloomRes,
       1.0,    // strength
       0.4,    // radius
       0.85    // threshold
@@ -63,7 +68,7 @@ export default function PostProcessing() {
     comp.addPass(vignettePass);
 
     return { composer: comp, bloomPass };
-  }, [gl, scene, camera]);
+  }, [gl, scene, camera, quality, size.width, size.height]);
 
   // Handle resize
   useEffect(() => {

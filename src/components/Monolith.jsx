@@ -13,6 +13,7 @@ export default function Monolith({ data, imageData }) {
   const meshRef = useRef();
   const groupRef = useRef();
   const [texture, setTexture] = useState(defaultTex);
+  const prevTextureRef = useRef(null);
   
   const activeMonolith = useStore(state => state.activeMonolith);
   const isVisible = activeMonolith === data.id;
@@ -28,9 +29,14 @@ export default function Monolith({ data, imageData }) {
     
     img.onload = () => {
       if (cancelled) return;
+      // Dispose previous texture before setting new one
+      if (prevTextureRef.current && prevTextureRef.current !== defaultTex) {
+        prevTextureRef.current.dispose();
+      }
       const tex = new THREE.Texture(img);
       tex.needsUpdate = true;
       tex.colorSpace = THREE.SRGBColorSpace;
+      prevTextureRef.current = tex;
       setTexture(tex);
     };
     
@@ -58,8 +64,13 @@ export default function Monolith({ data, imageData }) {
       ctx.fillStyle = '#888';
       ctx.fillText('Image unavailable', 256, 280);
       
+      // Dispose previous texture before setting fallback
+      if (prevTextureRef.current && prevTextureRef.current !== defaultTex) {
+        prevTextureRef.current.dispose();
+      }
       const fallbackTex = new THREE.CanvasTexture(canvas);
       fallbackTex.colorSpace = THREE.SRGBColorSpace;
+      prevTextureRef.current = fallbackTex;
       setTexture(fallbackTex);
     };
     
