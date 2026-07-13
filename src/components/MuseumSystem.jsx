@@ -4,6 +4,7 @@ import Sun from './Sun';
 import Earth from './Earth';
 import { useProximity } from '../hooks/useProximity';
 import { useNebulaProximity } from '../hooks/useNebulaProximity';
+import AsteroidBelt from './AsteroidBelt';
 
 export default function MuseumSystem({ astronautRef }) {
   // Calculate proximity to planets to drive UI
@@ -16,6 +17,7 @@ export default function MuseumSystem({ astronautRef }) {
     <>
       <Sun />
       <Earth />
+      <AsteroidBelt />
       
       {planets.map((planetData) => (
         planetData.id !== 'earth' && <Planet key={planetData.id} data={planetData} />
