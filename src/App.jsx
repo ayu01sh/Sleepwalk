@@ -12,6 +12,7 @@ import CinematicIntro from './components/CinematicIntro';
 import NavigationArrow from './components/NavigationArrow';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
+import ShootingStars from './components/ShootingStars';
 import NebulaCloud from './components/NebulaCloud';
 import MonolithGallery from './components/MonolithGallery';
 import BlackHole from './components/BlackHole';
@@ -46,6 +47,7 @@ function App() {
     >
       <Suspense fallback={null}>
         <Starfield />
+        <ShootingStars astronautRef={astronautRef} />
         
         <ambientLight intensity={0.12} />
         
