@@ -139,7 +139,7 @@ export default function DistantGalaxies() {
   const galaxiesData = useMemo(() => {
     const random = mulberry32(8888);
     const data = [];
-    const count = 21;
+    const count = 45;
     
     for (let i = 0; i < count; i++) {
       const isSpiral = random() > 0.5;
@@ -163,7 +163,7 @@ export default function DistantGalaxies() {
       data.push({
         position: new THREE.Vector3(x, y, z),
         texture,
-        size: 500 + random() * 500, // Size between 500 and 1000 units
+        size: 650 + random() * 650, // Scaled up 30% (Size between 650 and 1300 units)
         zRot: random() * Math.PI * 2,
         opacityBonus: random() * 0.3
       });
