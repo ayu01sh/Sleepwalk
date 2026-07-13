@@ -14,6 +14,7 @@ import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
 import ShootingStars from './components/ShootingStars';
 import Comets from './components/Comets';
+import DistantGalaxies from './components/DistantGalaxies';
 import NebulaCloud from './components/NebulaCloud';
 import MonolithGallery from './components/MonolithGallery';
 import BlackHole from './components/BlackHole';
@@ -48,6 +49,7 @@ function App() {
     >
       <Suspense fallback={null}>
         <Starfield />
+        <DistantGalaxies />
         <ShootingStars astronautRef={astronautRef} />
         <Comets />
         
