@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Neck ring -->
+  <rect x="25" y="82" width="50" height="12" rx="4" fill="#cccccc" />
+  
+  <!-- Helmet base (pure white) -->
+  <path fill="#ffffff" d="M50 8 C 22 8, 10 32, 10 55 C 10 72, 20 82, 30 85 L 70 85 C 80 82, 90 72, 90 55 C 90 32, 78 8, 50 8 Z" />
+  
+  <!-- Side attachments -->
+  <rect x="6" y="48" width="6" height="20" rx="2" fill="#dddddd" />
+  <rect x="88" y="48" width="6" height="20" rx="2" fill="#dddddd" />
+  
+  <!-- Visor (deep space blue) -->
+  <path fill="#0a1128" d="M50 25 C 28 25, 18 42, 18 58 C 18 72, 30 78, 50 78 C 70 78, 82 72, 82 58 C 82 42, 72 25, 50 25 Z" />
+  
+  <!-- Visor highlight/reflection (cyan/white semi-transparent curve) -->
+  <path fill="#00e5ff" opacity="0.3" d="M 28 35 C 40 28, 60 28, 72 35 C 75 42, 70 48, 50 48 C 30 48, 25 42, 28 35 Z" />
+  <path fill="#ffffff" opacity="0.4" d="M 32 37 C 42 32, 58 32, 68 37 C 69 40, 65 42, 50 42 C 35 42, 31 40, 32 37 Z" />
+</svg>

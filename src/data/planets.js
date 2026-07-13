@@ -3,7 +3,7 @@ export const planets = [
     id: 'mercury',
     name: 'Mercury',
     radius: 1.9,
-    position: [20, 0, -20], // distance ~28
+    position: [40, 0, -40], // distance ~56
     textures: {
       albedo: '/textures/planets/2k_mercury.jpg',
     },
@@ -17,7 +17,7 @@ export const planets = [
     id: 'venus',
     name: 'Venus',
     radius: 4.7,
-    position: [40, 0, -40], // distance ~56
+    position: [80, 0, -80], // distance ~113
     textures: {
       albedo: '/textures/planets/2k_venus_surface.jpg',
     },
@@ -31,7 +31,7 @@ export const planets = [
     id: 'earth',
     name: 'Earth',
     radius: 5,
-    position: [80, 0, -40], // distance ~89
+    position: [160, 0, -80], // distance ~178
     textures: {},
     facts: {
       diameter: '12,742 km',
@@ -43,7 +43,7 @@ export const planets = [
     id: 'mars',
     name: 'Mars',
     radius: 2.5,
-    position: [120, 0, 30],
+    position: [240, 0, 60],
     textures: {
       albedo: '/textures/planets/2k_mars.jpg',
     },
@@ -57,7 +57,7 @@ export const planets = [
     id: 'jupiter',
     name: 'Jupiter',
     radius: 15, // Not to scale, but large enough to feel massive
-    position: [200, 0, 100],
+    position: [400, 0, 200],
     textures: {
       albedo: '/textures/planets/2k_jupiter.jpg',
     },
@@ -71,7 +71,7 @@ export const planets = [
     id: 'saturn',
     name: 'Saturn',
     radius: 12.5,
-    position: [320, 0, 200],
+    position: [640, 0, 400],
     hasRings: true,
     ringRadius: [15, 25],
     textures: {
@@ -88,7 +88,7 @@ export const planets = [
     id: 'uranus',
     name: 'Uranus',
     radius: 10,
-    position: [480, 0, 350],
+    position: [960, 0, 700],
     textures: {
       albedo: '/textures/planets/2k_uranus.jpg',
     },
@@ -102,7 +102,7 @@ export const planets = [
     id: 'neptune',
     name: 'Neptune',
     radius: 9.8,
-    position: [700, 0, 550],
+    position: [1400, 0, 1100],
     textures: {
       albedo: '/textures/planets/2k_neptune.jpg',
     },

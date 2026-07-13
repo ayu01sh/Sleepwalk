@@ -30,18 +30,7 @@ export default function WaypointHUD({ astronautRef, cameraRef }) {
       const dist = astroPosVec.current.distanceTo(wpPosVec.current);
       setDistance(dist);
 
-      // We need the camera from the canvas — get it from the astronaut's parent scene
-      const scene = astronautRef.current.parent;
-      if (!scene) {
-        animFrameId = requestAnimationFrame(update);
-        return;
-      }
-
-      // Walk up to find the camera
-      let camera = null;
-      scene.traverse((obj) => {
-        if (obj.isCamera && obj.type === 'PerspectiveCamera') camera = obj;
-      });
+      const camera = useStore.getState().camera;
       
       if (!camera) {
         animFrameId = requestAnimationFrame(update);

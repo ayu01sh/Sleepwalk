@@ -6,8 +6,12 @@ import { useStore } from '../store/useStore';
 export default function CameraRig({ targetRef }) {
   const { camera, gl } = useThree();
   const introComplete = useStore((state) => state.introComplete);
+  const movement = useStore((state) => state.movement);
   const lookAtVec = useRef(new THREE.Vector3());
   const zoomDistance = useRef(5);
+
+  const BASE_FOV = 60;
+  const WARP_FOV = 110;
 
   // Pre-allocated vectors to avoid GC pressure in the render loop
   const _targetPos = useRef(new THREE.Vector3());
@@ -36,8 +40,17 @@ export default function CameraRig({ targetRef }) {
     };
   }, [gl.domElement]);
 
+  useEffect(() => {
+    useStore.getState().setCamera(camera);
+  }, [camera]);
+
   useFrame((state, delta) => {
     if (!introComplete || !targetRef.current) return;
+
+    // --- Warp FOV Stretching ---
+    const targetFov = movement.boost ? WARP_FOV : BASE_FOV;
+    camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 3 * delta);
+    camera.updateProjectionMatrix();
 
     // 1. Get the character's position (reuse pre-allocated)
     targetRef.current.getWorldPosition(_targetPos.current);

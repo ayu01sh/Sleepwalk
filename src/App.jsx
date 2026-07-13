@@ -12,6 +12,9 @@ import CinematicIntro from './components/CinematicIntro';
 import NavigationArrow from './components/NavigationArrow';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
+import ShootingStars from './components/ShootingStars';
+import Comets from './components/Comets';
+import DistantGalaxies from './components/DistantGalaxies';
 import NebulaCloud from './components/NebulaCloud';
 import MonolithGallery from './components/MonolithGallery';
 import BlackHole from './components/BlackHole';
@@ -19,6 +22,7 @@ import AudioEngine from './components/AudioEngine';
 import MobileControls from './ui/MobileControls';
 import WaypointHUD from './ui/WaypointHUD';
 import QualityToggle from './ui/QualityToggle';
+import MinimapHUD from './ui/MinimapHUD';
 
 function App() {
   const astronautRef = useRef();
@@ -35,6 +39,7 @@ function App() {
     <>
     <Canvas
       camera={{ fov: 60, near: 0.1, far: 10000, position: [0, 2, 10] }}
+      dpr={quality === 'high' ? [1, 2] : [0.5, 1]}
       gl={{ 
         antialias: true, 
         toneMapping: THREE.ACESFilmicToneMapping, 
@@ -44,6 +49,9 @@ function App() {
     >
       <Suspense fallback={null}>
         <Starfield />
+        <DistantGalaxies />
+        <ShootingStars astronautRef={astronautRef} />
+        <Comets />
         
         <ambientLight intensity={0.12} />
         
@@ -65,6 +73,7 @@ function App() {
       </Suspense>
     </Canvas>
     <WaypointHUD astronautRef={astronautRef} />
+    <MinimapHUD astronautRef={astronautRef} />
     <QualityToggle />
     <MobileControls />
     <AudioEngine astronautRef={astronautRef} />
