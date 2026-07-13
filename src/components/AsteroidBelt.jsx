@@ -18,9 +18,9 @@ export default function AsteroidBelt() {
   const quality = useStore(state => state.quality);
   
   const count = quality === 'high' ? 300 : 120;
-  const beltCenter = new THREE.Vector3(160, 0, 65); // Midpoint between Mars and Jupiter
-  const beltRadius = 50;
-  const beltThickness = 15;
+  const beltCenter = new THREE.Vector3(320, 0, 130); // New midpoint between Mars and Jupiter
+  const beltRadius = 100; // Increased radius to fit larger scale
+  const beltThickness = 30; // Increased thickness
   
   // Pre-allocate dummy object for computing instance matrices in the render loop
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -79,7 +79,7 @@ export default function AsteroidBelt() {
   });
 
   return (
-    <instancedMesh ref={meshRef} args={[null, null, count]}>
+    <instancedMesh ref={meshRef} args={[null, null, count]} frustumCulled={false}>
       {/* icosahedron detail level 0 = 20 faces, very cheap */}
       <icosahedronGeometry args={[1, 0]} />
       <meshStandardMaterial 
