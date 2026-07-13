@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import InfoPanel from './InfoPanel';
 import Waypoint from './Waypoint';
 import { planets } from '../data/planets';
+import Aurora from './Aurora';
 
 const atmosphereVert = `
 varying vec3 vNormal;
@@ -88,6 +89,9 @@ export default function Earth() {
           depthWrite={false}
         />
       </mesh>
+
+      {/* 4. Polar Auroras */}
+      <Aurora />
 
       <InfoPanel planet={planets.find(p => p.id === 'earth')} />
       <Waypoint planet={planets.find(p => p.id === 'earth')} />
