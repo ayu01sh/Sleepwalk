@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useRef } from 'react';
 import { useStore } from '../store/useStore';
 import { planets } from '../data/planets';
+import { getOrbitPosition } from '../utils/orbits';
 
 const PROXIMITY_THRESHOLD = 30; // Distance at which UI triggers
 
@@ -10,8 +11,9 @@ export function useProximity(targetRef) {
   const setNearestPlanet = useStore((state) => state.setNearestPlanet);
   const currentNearest = useRef(null);
   const astronautPos = useRef(new THREE.Vector3());
+  const planetPosRef = useRef(new THREE.Vector3());
 
-  useFrame(() => {
+  useFrame(({ clock }) => {
     if (!targetRef.current) return;
 
     targetRef.current.getWorldPosition(astronautPos.current);
@@ -20,8 +22,8 @@ export function useProximity(targetRef) {
     let minDistance = Infinity;
 
     for (const planet of planets) {
-      const planetPos = new THREE.Vector3(...planet.position);
-      const distance = astronautPos.current.distanceTo(planetPos);
+      getOrbitPosition(planet.position, clock.elapsedTime, planetPosRef.current);
+      const distance = astronautPos.current.distanceTo(planetPosRef.current);
       
       // Calculate distance relative to the planet's surface
       const distanceToSurface = distance - planet.radius;

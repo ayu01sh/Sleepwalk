@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { planets } from '../data/planets';
 import { monoliths } from '../data/nebulaData';
 import { BLACK_HOLE_POSITION } from '../components/BlackHole';
+import { getOrbitPosition } from '../utils/orbits';
 
 // Coordinate mapping: world XZ → minimap pixels
 const MAP_RADIUS = 70; // px
@@ -87,8 +88,10 @@ export default function MinimapHUD({ astronautRef }) {
       }
 
       // Draw Planets
+      const tempVec = new THREE.Vector3();
       planets.forEach(p => {
-        const mapPos = worldToMinimap(playerPos, { x: p.position[0], z: p.position[2] });
+        getOrbitPosition(p.position, time / 1000, tempVec);
+        const mapPos = worldToMinimap(playerPos, { x: tempVec.x, z: tempVec.z });
         ctx.beginPath();
         ctx.arc(cx + mapPos.x, cy + mapPos.y, mapPos.clamped ? 2 : 3, 0, Math.PI * 2);
         ctx.fillStyle = mapPos.clamped ? 'rgba(255, 255, 255, 0.4)' : (PLANET_COLORS[p.id] || '#fff');

@@ -4,9 +4,11 @@ import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import InfoPanel from './InfoPanel';
 import Waypoint from './Waypoint';
+import { getOrbitPosition } from '../utils/orbits';
 
 export default function Planet({ data }) {
   const meshRef = useRef();
+  const groupRef = useRef();
   
   // Load textures (returns an array based on what's available)
   const textureFiles = Object.values(data.textures);
@@ -21,14 +23,18 @@ export default function Planet({ data }) {
     }
   });
 
-  useFrame((state, delta) => {
+  useFrame(({ clock }, delta) => {
     if (meshRef.current) {
       meshRef.current.rotation.y += delta * 0.05; // Slow rotation
+    }
+    if (groupRef.current) {
+      // Calculate dynamic orbital position
+      getOrbitPosition(data.position, clock.elapsedTime, groupRef.current.position);
     }
   });
 
   return (
-    <group position={data.position}>
+    <group ref={groupRef} position={data.position}>
       <mesh ref={meshRef}>
         <sphereGeometry args={[data.radius, 64, 64]} />
         <meshStandardMaterial 

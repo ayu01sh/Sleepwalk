@@ -6,6 +6,7 @@ import InfoPanel from './InfoPanel';
 import Waypoint from './Waypoint';
 import { planets } from '../data/planets';
 import Aurora from './Aurora';
+import { getOrbitPosition } from '../utils/orbits';
 
 const atmosphereVert = `
 varying vec3 vNormal;
@@ -29,6 +30,9 @@ void main() {
 export default function Earth() {
   const earthRef = useRef();
   const cloudsRef = useRef();
+  const groupRef = useRef();
+  
+  const earthData = planets.find(p => p.id === 'earth');
 
   const [albedoMap, specularMap, normalMap, cloudsMap, nightMap] = useTexture([
     '/textures/earth/earth_albedo.jpg',
@@ -38,22 +42,23 @@ export default function Earth() {
     '/textures/earth/earth_night.png',
   ]);
 
-  useFrame((state, delta) => {
+  useFrame(({ clock }, delta) => {
     if (earthRef.current) {
       earthRef.current.rotation.y += delta * 0.02;
     }
     if (cloudsRef.current) {
       cloudsRef.current.rotation.y += delta * 0.025;
     }
+    if (groupRef.current) {
+      getOrbitPosition(earthData.position, clock.elapsedTime, groupRef.current.position);
+    }
   });
 
-  const earthData = planets.find(p => p.id === 'earth');
-
   return (
-    <group position={earthData.position}>
+    <group ref={groupRef} position={earthData.position}>
       {/* 1. Surface Sphere */}
       <mesh ref={earthRef}>
-        <sphereGeometry args={[5, 64, 64]} />
+        <sphereGeometry args={[6.5, 64, 64]} />
         <meshStandardMaterial 
           map={albedoMap}
           normalMap={normalMap}
@@ -67,7 +72,7 @@ export default function Earth() {
 
       {/* 2. Cloud Shell */}
       <mesh ref={cloudsRef}>
-        <sphereGeometry args={[5.03, 64, 64]} />
+        <sphereGeometry args={[6.539, 64, 64]} />
         <meshStandardMaterial 
           map={cloudsMap}
           transparent={true}
@@ -79,7 +84,7 @@ export default function Earth() {
 
       {/* 3. Atmosphere Rim */}
       <mesh>
-        <sphereGeometry args={[5.15, 64, 64]} />
+        <sphereGeometry args={[6.695, 64, 64]} />
         <shaderMaterial
           vertexShader={atmosphereVert}
           fragmentShader={atmosphereFrag}

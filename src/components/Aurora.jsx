@@ -85,12 +85,12 @@ export default function Aurora() {
   return (
     <group rotation={[0, 0, 23.5 * Math.PI / 180]}>
       {/* North Pole Aurora */}
-      <mesh ref={northRef} position={[0, 4.6, 0]} rotation={[Math.PI / 2, 0, 0]} material={material}>
-        <torusGeometry args={[2.0, 0.6, 16, 100]} />
+      <mesh ref={northRef} position={[0, 5.98, 0]} rotation={[Math.PI / 2, 0, 0]} material={material}>
+        <torusGeometry args={[2.6, 0.78, 16, 100]} />
       </mesh>
       {/* South Pole Aurora */}
-      <mesh ref={southRef} position={[0, -4.6, 0]} rotation={[Math.PI / 2, 0, 0]} material={material}>
-        <torusGeometry args={[2.0, 0.6, 16, 100]} />
+      <mesh ref={southRef} position={[0, -5.98, 0]} rotation={[Math.PI / 2, 0, 0]} material={material}>
+        <torusGeometry args={[2.6, 0.78, 16, 100]} />
       </mesh>
     </group>
   );
