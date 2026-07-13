@@ -78,7 +78,7 @@ export default function Sun() {
   return (
     <group position={[0, 0, 0]}>
       <mesh>
-        <sphereGeometry args={[25, 64, 64]} />
+        <sphereGeometry args={[32.5, 64, 64]} />
         <shaderMaterial
           ref={materialRef}
           vertexShader={sunVert}

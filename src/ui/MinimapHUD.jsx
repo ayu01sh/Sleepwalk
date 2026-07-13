@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import { planets } from '../data/planets';
 import { monoliths } from '../data/nebulaData';
 import { BLACK_HOLE_POSITION } from '../components/BlackHole';
+import { getOrbitPosition } from '../utils/orbits';
 
 // Coordinate mapping: world XZ → minimap pixels
 const MAP_RADIUS = 70; // px
@@ -87,8 +88,10 @@ export default function MinimapHUD({ astronautRef }) {
       }
 
       // Draw Planets
+      const tempVec = new THREE.Vector3();
       planets.forEach(p => {
-        const mapPos = worldToMinimap(playerPos, { x: p.position[0], z: p.position[2] });
+        getOrbitPosition(p.position, time / 1000, tempVec);
+        const mapPos = worldToMinimap(playerPos, { x: tempVec.x, z: tempVec.z });
         ctx.beginPath();
         ctx.arc(cx + mapPos.x, cy + mapPos.y, mapPos.clamped ? 2 : 3, 0, Math.PI * 2);
         ctx.fillStyle = mapPos.clamped ? 'rgba(255, 255, 255, 0.4)' : (PLANET_COLORS[p.id] || '#fff');
@@ -115,6 +118,15 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.fillStyle = '#ff3333';
       ctx.shadowColor = '#ff0000';
       ctx.shadowBlur = 5;
+      ctx.fill();
+      
+      // Draw ISRO Spaceship (Z = 2000)
+      const isroPos = worldToMinimap(playerPos, { x: 0, z: 2000 });
+      ctx.beginPath();
+      ctx.arc(cx + isroPos.x, cy + isroPos.y, isroPos.clamped ? 2 : 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#ff9933'; // Saffron orange
+      ctx.shadowColor = '#ff9933';
+      ctx.shadowBlur = 4;
       ctx.fill();
       ctx.shadowBlur = 0; // reset
 

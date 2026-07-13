@@ -18,9 +18,9 @@ export default function AsteroidBelt() {
   const quality = useStore(state => state.quality);
   
   const count = quality === 'high' ? 300 : 120;
-  const beltCenter = new THREE.Vector3(320, 0, 130); // New midpoint between Mars and Jupiter
-  const beltRadius = 100; // Increased radius to fit larger scale
-  const beltThickness = 30; // Increased thickness
+  // Asteroid belt sits between Mars (~250) and Jupiter (~450)
+  const beltRadius = 350; 
+  const beltThickness = 60; 
   
   // Pre-allocate dummy object for computing instance matrices in the render loop
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -32,9 +32,9 @@ export default function AsteroidBelt() {
     for (let i = 0; i < 300; i++) { // Always generate max count
       const angle = seededRandom() * Math.PI * 2;
       const r = beltRadius + (seededRandom() - 0.5) * beltThickness;
-      const x = beltCenter.x + Math.cos(angle) * r;
-      const z = beltCenter.z + Math.sin(angle) * r;
-      const y = (seededRandom() - 0.5) * 5; // slight vertical scatter
+      const x = Math.cos(angle) * r;
+      const z = Math.sin(angle) * r;
+      const y = (seededRandom() - 0.5) * 10; // vertical scatter
       
       data.push({
         position: new THREE.Vector3(x, y, z),
@@ -57,6 +57,9 @@ export default function AsteroidBelt() {
   useFrame((_, delta) => {
     if (!meshRef.current) return;
     
+    // Slowly orbit the entire belt around the Sun
+    meshRef.current.rotation.y += delta * 0.01;
+
     // Animate rotation of each instance
     for (let i = 0; i < count; i++) {
       const asteroid = asteroids[i];
