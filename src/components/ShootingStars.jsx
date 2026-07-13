@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { useStore } from '../store/useStore';
 
 const MAX_STREAKS = 7;
-const SPAWN_DISTANCE = 3500;
+const SPAWN_DISTANCE = 4900;
 const TRAVEL_DISTANCE = 2100;
 
 function getRandomDirectionOnSphere() {
