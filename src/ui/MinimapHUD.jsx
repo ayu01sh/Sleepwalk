@@ -7,7 +7,7 @@ import { BLACK_HOLE_POSITION } from '../components/BlackHole';
 import { getOrbitPosition } from '../utils/orbits';
 
 // Coordinate mapping: world XZ → minimap pixels
-const MAP_RADIUS = 70; // px
+const MAP_RADIUS = 45; // px
 const WORLD_SCALE = 0.02; // 1 world unit = 0.02 minimap pixels
 
 // Planet colors for minimap dots (planets.js doesn't have a color property)
@@ -181,12 +181,12 @@ export default function MinimapHUD({ astronautRef }) {
   }, [targetWaypoint, inNebulaZone, astronautRef]);
 
   return (
-    <div style={{
+    <div className="minimap-container" style={{
       position: 'absolute',
-      bottom: '20px',
+      top: '20px',
       right: '20px',
-      width: '160px',
-      height: '160px',
+      width: '100px',
+      height: '100px',
       borderRadius: '50%',
       background: 'rgba(10, 16, 25, 0.6)',
       backdropFilter: 'blur(8px)',
@@ -220,8 +220,8 @@ export default function MinimapHUD({ astronautRef }) {
       }} />
       <canvas
         ref={canvasRef}
-        width={160}
-        height={160}
+        width={100}
+        height={100}
         style={{
           position: 'absolute',
           top: 0,

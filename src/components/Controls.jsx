@@ -44,38 +44,71 @@ export default function Controls({ targetRef }) {
     };
 
     // --- Touch Panning (Mobile) ---
+    let activeTouchId = null;
     let lastTouchX = 0;
     let lastTouchY = 0;
 
     const handleTouchStart = (e) => {
-      // Only care about the first touch on the canvas
-      if (e.touches.length > 0) {
-        lastTouchX = e.touches[0].clientX;
-        lastTouchY = e.touches[0].clientY;
+      // Pick the first touch specifically on the canvas
+      if (activeTouchId === null && e.changedTouches.length > 0) {
+        activeTouchId = e.changedTouches[0].identifier;
+        lastTouchX = e.changedTouches[0].clientX;
+        lastTouchY = e.changedTouches[0].clientY;
       }
     };
 
     const handleTouchMove = (e) => {
-      // Prevent default scrolling when swiping on the canvas
+      // Prevent default scrolling/zooming when swiping on the canvas
       e.preventDefault();
       
-      if (e.touches.length > 0) {
-        const touchX = e.touches[0].clientX;
-        const touchY = e.touches[0].clientY;
-        
-        const deltaX = touchX - lastTouchX;
-        const deltaY = touchY - lastTouchY;
-        
-        // Touch sensitivity can be slightly higher than mouse
-        yaw.current -= deltaX * MOUSE_SENSITIVITY * 2;
-        pitch.current -= deltaY * MOUSE_SENSITIVITY * 2;
-        
-        const maxPitch = Math.PI / 2 - 0.1;
-        pitch.current = Math.max(-maxPitch, Math.min(maxPitch, pitch.current));
-        
-        lastTouchX = touchX;
-        lastTouchY = touchY;
+      if (activeTouchId === null) return;
+      
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        const touch = e.changedTouches[i];
+        if (touch.identifier === activeTouchId) {
+          const deltaX = touch.clientX - lastTouchX;
+          const deltaY = touch.clientY - lastTouchY;
+          
+          yaw.current -= deltaX * MOUSE_SENSITIVITY * 2;
+          pitch.current -= deltaY * MOUSE_SENSITIVITY * 2;
+          
+          const maxPitch = Math.PI / 2 - 0.1;
+          pitch.current = Math.max(-maxPitch, Math.min(maxPitch, pitch.current));
+          
+          lastTouchX = touch.clientX;
+          lastTouchY = touch.clientY;
+          break;
+        }
       }
+    };
+
+    const handleTouchEnd = (e) => {
+      for (let i = 0; i < e.changedTouches.length; i++) {
+        if (e.changedTouches[i].identifier === activeTouchId) {
+          activeTouchId = null;
+          break;
+        }
+      }
+    };
+
+    document.addEventListener('pointerlockchange', handlePointerLockChange);
+    gl.domElement.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('mousemove', handleMouseMove);
+    
+    // Bind touch events to canvas
+    gl.domElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+    gl.domElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+    gl.domElement.addEventListener('touchend', handleTouchEnd);
+    gl.domElement.addEventListener('touchcancel', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('pointerlockchange', handlePointerLockChange);
+      gl.domElement.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('mousemove', handleMouseMove);
+      gl.domElement.removeEventListener('touchstart', handleTouchStart);
+      gl.domElement.removeEventListener('touchmove', handleTouchMove);
+      gl.domElement.removeEventListener('touchend', handleTouchEnd);
+      gl.domElement.removeEventListener('touchcancel', handleTouchEnd);
     };
 
     document.addEventListener('pointerlockchange', handlePointerLockChange);

@@ -47,7 +47,11 @@ export default function ControlsOverlay() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [visible]);
 
-  if (!visible) return null;
+  // Reliable mobile check (excludes touch-screen laptops)
+  const isMobilePhone = typeof window !== 'undefined' && 
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  if (!visible || isMobilePhone) return null;
 
   return (
     <div style={{

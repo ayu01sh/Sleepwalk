@@ -17,6 +17,7 @@ html, body, #root {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-primary);
+  touch-action: none; /* Disable all native touch interactions like pinch-to-zoom */
 }
 
 /* --- Mobile Touch Controls --- */
@@ -37,14 +38,14 @@ html, body, #root {
 
 .joystick-zone {
   pointer-events: auto;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   position: relative;
 }
 
 .joystick-base {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.1);
   border: 2px solid rgba(255, 255, 255, 0.2);
@@ -57,8 +58,8 @@ html, body, #root {
 }
 
 .joystick-knob {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.6);
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
@@ -94,9 +95,10 @@ html, body, #root {
 }
 
 .action-btn.warp-btn {
-  width: 80px;
-  height: 80px;
-  border-radius: 40px;
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  font-size: 14px;
   background: rgba(255, 100, 100, 0.2);
   border-color: rgba(255, 100, 100, 0.5);
   margin-top: 10px;
