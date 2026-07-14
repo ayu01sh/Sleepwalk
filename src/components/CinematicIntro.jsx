@@ -22,7 +22,6 @@ export default function CinematicIntro({ targetRef }) {
     const handleKeyDown = () => {
       if (!introComplete) {
         setIntroComplete();
-        setShowControlsHint(true);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -36,7 +35,6 @@ export default function CinematicIntro({ targetRef }) {
     
     if (timer.current > 6) {
       setIntroComplete();
-      setShowControlsHint(true);
       return;
     }
 

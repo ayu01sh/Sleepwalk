@@ -5,7 +5,7 @@ export const useStore = create((set) => ({
   introComplete: false,
   setIntroComplete: () => set({ introComplete: true, hasSeenIntro: true }),
 
-  showControlsHint: false,
+  showControlsHint: true,
   setShowControlsHint: (v) => set({ showControlsHint: v }),
 
   isFirstPerson: false,

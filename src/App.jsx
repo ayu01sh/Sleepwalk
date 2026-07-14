@@ -23,6 +23,7 @@ import WaypointHUD from './ui/WaypointHUD';
 import QualityToggle from './ui/QualityToggle';
 import MinimapHUD from './ui/MinimapHUD';
 import VisorHUD from './ui/VisorHUD';
+import ControlsOverlay from './ui/ControlsOverlay';
 import Voyager from './components/Voyager';
 import Pulsar from './components/Pulsar';
 import Supernova from './components/Supernova';
@@ -86,6 +87,7 @@ function App() {
     </Canvas>
     <WaypointHUD astronautRef={astronautRef} />
     <MinimapHUD astronautRef={astronautRef} />
+    <ControlsOverlay />
     <QualityToggle />
     <MobileControls />
     <VisorHUD />
