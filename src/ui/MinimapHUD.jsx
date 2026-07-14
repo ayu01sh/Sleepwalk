@@ -119,6 +119,15 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowColor = '#ff0000';
       ctx.shadowBlur = 5;
       ctx.fill();
+
+      // Draw Pulsar (X = -3000, Z = -3000)
+      const pulsarPos = worldToMinimap(playerPos, { x: -3000, z: -3000 });
+      ctx.beginPath();
+      ctx.arc(cx + pulsarPos.x, cy + pulsarPos.y, pulsarPos.clamped ? 3 : 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#00e5ff'; // Cyan
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 8;
+      ctx.fill();
       
       // Draw ISRO Spaceship (Z = 2000)
       const isroPos = worldToMinimap(playerPos, { x: 0, z: 2000 });

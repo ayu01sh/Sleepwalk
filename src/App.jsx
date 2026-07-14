@@ -9,7 +9,6 @@ import Astronaut from './components/Astronaut';
 import CameraRig from './components/CameraRig';
 import Controls from './components/Controls';
 import CinematicIntro from './components/CinematicIntro';
-import NavigationArrow from './components/NavigationArrow';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
 import ShootingStars from './components/ShootingStars';
@@ -25,6 +24,7 @@ import QualityToggle from './ui/QualityToggle';
 import MinimapHUD from './ui/MinimapHUD';
 import VisorHUD from './ui/VisorHUD';
 import Voyager from './components/Voyager';
+import Pulsar from './components/Pulsar';
 
 function App() {
   const astronautRef = useRef();
@@ -59,6 +59,9 @@ function App() {
         
         <BlackHole astronautRef={astronautRef} />
       
+      {/* Phase 8: Pulsar */}
+      <Pulsar position={[-3000, 300, -3000]} astronautRef={astronautRef} />
+
       {/* Easter Egg / Phase 2: Voyager 1 */}
       <Voyager position={[1500, 50, -2000]} astronautRef={astronautRef} />
         <MuseumSystem astronautRef={astronautRef} />
@@ -74,7 +77,7 @@ function App() {
         {quality === 'high' && <PostProcessing />}
         <AdaptiveDpr pixelated />
         
-        <NavigationArrow astronautRef={astronautRef} />
+        {/* Removed NavigationArrow */}
         
       </Suspense>
     </Canvas>
