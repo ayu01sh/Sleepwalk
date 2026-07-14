@@ -128,6 +128,16 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowColor = '#ff9933';
       ctx.shadowBlur = 4;
       ctx.fill();
+
+      // Draw Voyager 1 (X = 1500, Z = -2000)
+      const voyagerPos = worldToMinimap(playerPos, { x: 1500, z: -2000 });
+      ctx.beginPath();
+      ctx.arc(cx + voyagerPos.x, cy + voyagerPos.y, voyagerPos.clamped ? 2 : 4, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffd700'; // Gold
+      ctx.shadowColor = '#ffd700';
+      ctx.shadowBlur = 4;
+      ctx.fill();
+
       ctx.shadowBlur = 0; // reset
 
       // Draw Player (Center)
