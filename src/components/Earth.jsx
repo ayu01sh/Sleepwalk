@@ -8,6 +8,8 @@ import { planets } from '../data/planets';
 import Aurora from './Aurora';
 import { getOrbitPosition } from '../utils/orbits';
 import Moon from './Moon';
+import { useStore } from '../store/useStore';
+import { gameTime } from '../utils/gameTime';
 
 const atmosphereVert = `
 varying vec3 vNormal;
@@ -44,14 +46,16 @@ export default function Earth() {
   ]);
 
   useFrame(({ clock }, delta) => {
+    const timeScale = useStore.getState().timeScale;
+    
     if (earthRef.current) {
-      earthRef.current.rotation.y += delta * 0.02;
+      earthRef.current.rotation.y += delta * 0.02 * timeScale;
     }
     if (cloudsRef.current) {
-      cloudsRef.current.rotation.y += delta * 0.025;
+      cloudsRef.current.rotation.y += delta * 0.025 * timeScale;
     }
     if (groupRef.current) {
-      getOrbitPosition(earthData.position, clock.elapsedTime, groupRef.current.position);
+      getOrbitPosition(earthData.position, gameTime.elapsed, groupRef.current.position);
     }
   });
 

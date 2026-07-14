@@ -3,9 +3,11 @@ import { useFrame } from '@react-three/fiber';
 import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import InfoPanel from './InfoPanel';
+import { useStore } from '../store/useStore';
 import Waypoint from './Waypoint';
 import { getOrbitPosition } from '../utils/orbits';
 import Moon from './Moon';
+import { gameTime } from '../utils/gameTime';
 
 export default function Planet({ data }) {
   const meshRef = useRef();
@@ -26,11 +28,12 @@ export default function Planet({ data }) {
 
   useFrame(({ clock }, delta) => {
     if (meshRef.current) {
-      meshRef.current.rotation.y += delta * 0.05; // Slow rotation
+      const timeScale = useStore.getState().timeScale;
+      meshRef.current.rotation.y += delta * 0.05 * timeScale; // Slow rotation
     }
     if (groupRef.current) {
       // Calculate dynamic orbital position
-      getOrbitPosition(data.position, clock.elapsedTime, groupRef.current.position);
+      getOrbitPosition(data.position, gameTime.elapsed, groupRef.current.position);
     }
   });
 

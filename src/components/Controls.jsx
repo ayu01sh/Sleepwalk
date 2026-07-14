@@ -160,7 +160,8 @@ export default function Controls({ targetRef }) {
     velocity.current.multiplyScalar(DAMPING);
 
     // 6. Update position (reuse pre-allocated)
-    const moveDelta = _moveDelta.current.copy(velocity.current).multiplyScalar(delta * 60);
+    const timeScale = useStore.getState().timeScale;
+    const moveDelta = _moveDelta.current.copy(velocity.current).multiplyScalar(delta * 60 * timeScale);
     targetRef.current.position.add(moveDelta);
   });
 

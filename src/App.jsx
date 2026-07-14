@@ -12,6 +12,8 @@ import CinematicIntro from './components/CinematicIntro';
 import PostProcessing from './components/PostProcessing';
 import MuseumSystem from './components/MuseumSystem';
 import ShootingStars from './components/ShootingStars';
+import { useFrame } from '@react-three/fiber';
+import { gameTime } from './utils/gameTime';
 import Comets from './components/Comets';
 import DistantGalaxies from './components/DistantGalaxies';
 import NebulaCloud from './components/NebulaCloud';
@@ -27,6 +29,15 @@ import ControlsOverlay from './ui/ControlsOverlay';
 import Voyager from './components/Voyager';
 import Pulsar from './components/Pulsar';
 import Supernova from './components/Supernova';
+import RelativityManager from './components/RelativityManager';
+
+function GlobalTimeTracker() {
+  useFrame((state, delta) => {
+    const ts = useStore.getState().timeScale;
+    gameTime.elapsed += delta * ts;
+  });
+  return null;
+}
 
 function App() {
   const astronautRef = useRef();
@@ -51,6 +62,8 @@ function App() {
         autoClear: false,
       }}
     >
+      <GlobalTimeTracker />
+      <RelativityManager astronautRef={astronautRef} />
       <Suspense fallback={null}>
         <Starfield />
         <DistantGalaxies />

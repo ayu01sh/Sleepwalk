@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import vertexShader from '../shaders/blackHole.vert?raw';
 import fragmentShader from '../shaders/blackHole.frag?raw';
 
-export const BLACK_HOLE_POSITION = [-4000, 0, 0];
+export const BLACK_HOLE_POSITION = [-7000, 0, 0];
 
 export default function BlackHole() {
   const materialRef = useRef();

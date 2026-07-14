@@ -1,17 +1,20 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useStore } from '../store/useStore';
+import { gameTime } from '../utils/gameTime';
 
 export default function Moon({ data }) {
   const moonRef = useRef();
 
-  useFrame(({ clock }) => {
+  useFrame((state, delta) => {
     if (moonRef.current) {
+      const timeScale = useStore.getState().timeScale;
       // Tidally locked or slow rotation
-      moonRef.current.rotation.y += 0.01;
+      moonRef.current.rotation.y += 0.01 * timeScale * 60 * delta;
       
       // Orbit around the parent planet
-      const time = clock.elapsedTime;
+      const time = gameTime.elapsed;
       const angle = time * data.orbitSpeed;
       moonRef.current.position.x = Math.cos(angle) * data.orbitRadius;
       moonRef.current.position.z = Math.sin(angle) * data.orbitRadius;
