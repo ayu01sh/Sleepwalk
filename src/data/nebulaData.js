@@ -1,5 +1,5 @@
-// Nebula center is placed deep in space, far beyond Neptune
-export const NEBULA_CENTER = [4000, 0, 0];
+// Nebula center is placed deep in space, far behind the starting point
+export const NEBULA_CENTER = [0, -1000, 8000];
 export const NEBULA_RADIUS = 800;          // Increased radius of the particle cloud
 export const NEBULA_ENTRY_THRESHOLD = 500; // Distance at which nebula "fog" begins
 

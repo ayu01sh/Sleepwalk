@@ -117,6 +117,15 @@ export default function MobileControls() {
       {/* Right side: Action Buttons */}
       <div className="action-buttons-zone">
         <button 
+          className="action-btn constellation-btn"
+          onTouchStart={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(true); }}
+          onTouchEnd={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
+          onTouchCancel={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
+          style={{ fontSize: '24px' }}
+        >
+          ⭐
+        </button>
+        <button 
           className="action-btn warp-btn"
           onTouchStart={handleButton('boost', true)}
           onTouchEnd={handleButton('boost', false)}
