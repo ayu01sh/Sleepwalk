@@ -23,6 +23,8 @@ import MobileControls from './ui/MobileControls';
 import WaypointHUD from './ui/WaypointHUD';
 import QualityToggle from './ui/QualityToggle';
 import MinimapHUD from './ui/MinimapHUD';
+import VisorHUD from './ui/VisorHUD';
+import Voyager from './components/Voyager';
 
 function App() {
   const astronautRef = useRef();
@@ -55,6 +57,10 @@ function App() {
         
         <ambientLight intensity={0.12} />
         
+        <BlackHole astronautRef={astronautRef} />
+      
+      {/* Easter Egg / Phase 2: Voyager 1 */}
+      <Voyager position={[1500, 50, -2000]} astronautRef={astronautRef} />
         <MuseumSystem astronautRef={astronautRef} />
         <NebulaCloud />
         <MonolithGallery />
@@ -76,6 +82,7 @@ function App() {
     <MinimapHUD astronautRef={astronautRef} />
     <QualityToggle />
     <MobileControls />
+    <VisorHUD />
     <AudioEngine astronautRef={astronautRef} />
     </>
   );

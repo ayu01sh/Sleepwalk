@@ -1,10 +1,12 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
+import { useStore } from '../store/useStore';
 
 const Astronaut = React.forwardRef((props, ref) => {
   const meshRef = useRef();
   const { scene } = useGLTF('/models/astronaut.glb');
+  const isFirstPerson = useStore(state => state.isFirstPerson);
 
   useFrame(({ clock }) => {
     if (meshRef.current) {
@@ -16,7 +18,7 @@ const Astronaut = React.forwardRef((props, ref) => {
 
   return (
     <group ref={ref} {...props}>
-      <group ref={meshRef}>
+      <group ref={meshRef} visible={!isFirstPerson}>
         {/* Local light so the astronaut is always visible */}
         <pointLight position={[0, 0.5, 2]} intensity={21} distance={10} color="#ffffff" />
         <primitive object={scene} scale={0.5} position={[0, -0.5, 0]} rotation={[0, Math.PI, 0]} />

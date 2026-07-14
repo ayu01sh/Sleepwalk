@@ -55,23 +55,35 @@ export default function CameraRig({ targetRef }) {
     // 1. Get the character's position (reuse pre-allocated)
     targetRef.current.getWorldPosition(_targetPos.current);
 
-    // 2. Define the ideal camera offset (behind and above)
-    // Scale height slightly as we zoom out
-    const heightOffset = 1.5 + (zoomDistance.current - 5) * 0.2;
-    _idealOffset.current.set(0, heightOffset, zoomDistance.current);
-    _idealOffset.current.applyQuaternion(targetRef.current.quaternion);
-    _idealOffset.current.add(_targetPos.current);
+    const isFirstPerson = useStore.getState().isFirstPerson;
 
-    // 3. Smoothly interpolate the camera position
-    camera.position.lerp(_idealOffset.current, 5 * delta);
+    if (isFirstPerson) {
+      _idealOffset.current.set(0, 0.5, -0.5);
+      _idealOffset.current.applyQuaternion(targetRef.current.quaternion);
+      _idealOffset.current.add(_targetPos.current);
+      
+      _idealLookAt.current.set(0, 0.5, -10);
+      _idealLookAt.current.applyQuaternion(targetRef.current.quaternion);
+      _idealLookAt.current.add(_targetPos.current);
+      
+      camera.position.lerp(_idealOffset.current, 20 * delta);
+      lookAtVec.current.lerp(_idealLookAt.current, 20 * delta);
+    } else {
+      const heightOffset = 1.5 + (zoomDistance.current - 5) * 0.2;
+      _idealOffset.current.set(0, heightOffset, zoomDistance.current);
+      _idealOffset.current.applyQuaternion(targetRef.current.quaternion);
+      _idealOffset.current.add(_targetPos.current);
 
-    // 4. Smoothly interpolate lookAt target
-    _idealLookAt.current.set(
-      _targetPos.current.x,
-      _targetPos.current.y + 1,
-      _targetPos.current.z
-    );
-    lookAtVec.current.lerp(_idealLookAt.current, 5 * delta);
+      camera.position.lerp(_idealOffset.current, 5 * delta);
+
+      _idealLookAt.current.set(
+        _targetPos.current.x,
+        _targetPos.current.y + 1,
+        _targetPos.current.z
+      );
+      lookAtVec.current.lerp(_idealLookAt.current, 5 * delta);
+    }
+
     camera.lookAt(lookAtVec.current);
   });
 
