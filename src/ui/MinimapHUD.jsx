@@ -7,7 +7,7 @@ import { BLACK_HOLE_POSITION } from '../components/BlackHole';
 import { getOrbitPosition } from '../utils/orbits';
 
 // Coordinate mapping: world XZ → minimap pixels
-const MAP_RADIUS = 70; // px
+const MAP_RADIUS = 45; // px
 const WORLD_SCALE = 0.02; // 1 world unit = 0.02 minimap pixels
 
 // Planet colors for minimap dots (planets.js doesn't have a color property)
@@ -119,6 +119,24 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowColor = '#ff0000';
       ctx.shadowBlur = 5;
       ctx.fill();
+
+      // Draw Pulsar (X = -3000, Z = -3000)
+      const pulsarPos = worldToMinimap(playerPos, { x: -3000, z: -3000 });
+      ctx.beginPath();
+      ctx.arc(cx + pulsarPos.x, cy + pulsarPos.y, pulsarPos.clamped ? 3 : 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#00e5ff'; // Cyan
+      ctx.shadowColor = '#00e5ff';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+
+      // Draw Supernova Remnant (X = 5200, Z = 7200)
+      const snPos = worldToMinimap(playerPos, { x: 5200, z: 7200 });
+      ctx.beginPath();
+      ctx.arc(cx + snPos.x, cy + snPos.y, snPos.clamped ? 4 : 8, 0, Math.PI * 2);
+      ctx.fillStyle = '#ff0066'; // Pink
+      ctx.shadowColor = '#ff0066';
+      ctx.shadowBlur = 15;
+      ctx.fill();
       
       // Draw ISRO Spaceship (Z = 2000)
       const isroPos = worldToMinimap(playerPos, { x: 0, z: 2000 });
@@ -163,12 +181,12 @@ export default function MinimapHUD({ astronautRef }) {
   }, [targetWaypoint, inNebulaZone, astronautRef]);
 
   return (
-    <div style={{
+    <div className="minimap-container" style={{
       position: 'absolute',
-      bottom: '20px',
+      top: '20px',
       right: '20px',
-      width: '160px',
-      height: '160px',
+      width: '100px',
+      height: '100px',
       borderRadius: '50%',
       background: 'rgba(10, 16, 25, 0.6)',
       backdropFilter: 'blur(8px)',
@@ -202,8 +220,8 @@ export default function MinimapHUD({ astronautRef }) {
       }} />
       <canvas
         ref={canvasRef}
-        width={160}
-        height={160}
+        width={100}
+        height={100}
         style={{
           position: 'absolute',
           top: 0,

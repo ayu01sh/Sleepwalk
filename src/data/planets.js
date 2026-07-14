@@ -37,7 +37,10 @@ export const planets = [
       diameter: '12,742 km',
       distance: '149.6 million km',
       description: 'A vibrant oasis, the only known world to harbor life.',
-    }
+    },
+    moons: [
+      { id: 'moon', name: 'Moon', radius: 1.7, orbitRadius: 15, orbitSpeed: 0.5, color: '#a0a0a0' }
+    ]
   },
   {
     id: 'mars',
@@ -65,7 +68,13 @@ export const planets = [
       diameter: '139,820 km',
       distance: '778.5 million km',
       description: 'A gas giant with a Great Red Spot that is a centuries-old storm.',
-    }
+    },
+    moons: [
+      { id: 'io', name: 'Io', radius: 1.8, orbitRadius: 28, orbitSpeed: 1.2, color: '#ffff99' },
+      { id: 'europa', name: 'Europa', radius: 1.6, orbitRadius: 36, orbitSpeed: 0.9, color: '#dddddd' },
+      { id: 'ganymede', name: 'Ganymede', radius: 2.6, orbitRadius: 46, orbitSpeed: 0.6, color: '#aaaaaa' },
+      { id: 'callisto', name: 'Callisto', radius: 2.4, orbitRadius: 58, orbitSpeed: 0.4, color: '#888888' }
+    ]
   },
   {
     id: 'saturn',

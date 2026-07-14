@@ -5,7 +5,7 @@ export const useStore = create((set) => ({
   introComplete: false,
   setIntroComplete: () => set({ introComplete: true, hasSeenIntro: true }),
 
-  showControlsHint: false,
+  showControlsHint: true,
   setShowControlsHint: (v) => set({ showControlsHint: v }),
 
   isFirstPerson: false,
@@ -13,6 +13,12 @@ export const useStore = create((set) => ({
 
   nearestPlanet: null,
   setNearestPlanet: (id) => set({ nearestPlanet: id }),
+
+  timeScale: 1.0,
+  setTimeScale: (val) => set({ timeScale: val }),
+
+  relativityIntensity: 0.0,
+  setRelativityIntensity: (val) => set({ relativityIntensity: val }),
 
   movement: {
     forward: false,

@@ -117,22 +117,6 @@ export default function MobileControls() {
       {/* Right side: Action Buttons */}
       <div className="action-buttons-zone">
         <button 
-          className="action-btn ascend-btn"
-          onTouchStart={handleButton('ascend', true)}
-          onTouchEnd={handleButton('ascend', false)}
-          onTouchCancel={handleButton('ascend', false)}
-        >
-          ▲
-        </button>
-        <button 
-          className="action-btn descend-btn"
-          onTouchStart={handleButton('descend', true)}
-          onTouchEnd={handleButton('descend', false)}
-          onTouchCancel={handleButton('descend', false)}
-        >
-          ▼
-        </button>
-        <button 
           className="action-btn warp-btn"
           onTouchStart={handleButton('boost', true)}
           onTouchEnd={handleButton('boost', false)}

@@ -170,11 +170,11 @@ export default function AudioEngine({ astronautRef }) {
       if (isMoving && isWarping) {
         // Full warp sound
         thrusterGainRef.current.gain.setTargetAtTime(0.3, t, 0.1);
-        thrusterFilterRef.current.frequency.setTargetAtTime(1200, t, 0.2);
+        thrusterFilterRef.current.frequency.setTargetAtTime(1200 * useStore.getState().timeScale, t, 0.2);
       } else if (isMoving) {
         // Standard maneuvering thrusters
         thrusterGainRef.current.gain.setTargetAtTime(0.05, t, 0.1);
-        thrusterFilterRef.current.frequency.setTargetAtTime(400, t, 0.2);
+        thrusterFilterRef.current.frequency.setTargetAtTime(400 * useStore.getState().timeScale, t, 0.2);
       } else {
         // Idle/silent
         thrusterGainRef.current.gain.setTargetAtTime(0, t, 0.3);

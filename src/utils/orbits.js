@@ -22,9 +22,8 @@ export function getOrbitPosition(initialPosition, time, targetVector = new THREE
   const startAngle = Math.atan2(z0, x0);
   
   // Orbital speed is inversely proportional to the square root of the distance
-  // (Simulates Kepler's third law conceptually)
-  // Multiplier tweaks the overall speed of the solar system (decreased by 80%)
-  const speed = 4 / Math.sqrt(radius);
+  // Reduced by an additional 60% from the previous state (so 4 * 0.4 = 1.6)
+  const speed = 1.6 / Math.sqrt(radius);
   
   // Current angle
   const currentAngle = startAngle + time * speed;
