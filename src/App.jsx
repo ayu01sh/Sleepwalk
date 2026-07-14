@@ -25,6 +25,7 @@ import MinimapHUD from './ui/MinimapHUD';
 import VisorHUD from './ui/VisorHUD';
 import Voyager from './components/Voyager';
 import Pulsar from './components/Pulsar';
+import Supernova from './components/Supernova';
 
 function App() {
   const astronautRef = useRef();
@@ -40,7 +41,7 @@ function App() {
   return (
     <>
     <Canvas
-      camera={{ fov: 60, near: 0.1, far: 10000, position: [0, 2, 10] }}
+      camera={{ fov: 60, near: 0.1, far: 50000, position: [0, 2, 10] }}
       dpr={quality === 'high' ? [1, 2] : [0.5, 1]}
       gl={{ 
         antialias: true, 
@@ -62,12 +63,14 @@ function App() {
       {/* Phase 8: Pulsar */}
       <Pulsar position={[-3000, 300, -3000]} astronautRef={astronautRef} />
 
+      {/* Phase 10: Supernova Remnant */}
+      <Supernova position={[5200, 520, 7200]} />
+
       {/* Easter Egg / Phase 2: Voyager 1 */}
       <Voyager position={[1500, 50, -2000]} astronautRef={astronautRef} />
         <MuseumSystem astronautRef={astronautRef} />
         <NebulaCloud />
         <MonolithGallery />
-        <BlackHole />
         
         <Astronaut ref={astronautRef} position={[0, 30, 2100]} />
         <CameraRig targetRef={astronautRef} />

@@ -128,6 +128,15 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowColor = '#00e5ff';
       ctx.shadowBlur = 8;
       ctx.fill();
+
+      // Draw Supernova Remnant (X = 5200, Z = 7200)
+      const snPos = worldToMinimap(playerPos, { x: 5200, z: 7200 });
+      ctx.beginPath();
+      ctx.arc(cx + snPos.x, cy + snPos.y, snPos.clamped ? 4 : 8, 0, Math.PI * 2);
+      ctx.fillStyle = '#ff0066'; // Pink
+      ctx.shadowColor = '#ff0066';
+      ctx.shadowBlur = 15;
+      ctx.fill();
       
       // Draw ISRO Spaceship (Z = 2000)
       const isroPos = worldToMinimap(playerPos, { x: 0, z: 2000 });
