@@ -101,6 +101,9 @@ export default function ControlsOverlay() {
         
         <div style={{ color: '#00e5ff', fontWeight: 'bold' }}>Mouse Scroll</div>
         <div>Adjust Camera Zoom</div>
+
+        <div style={{ color: '#00e5ff', fontWeight: 'bold' }}>Hold [C]</div>
+        <div>View Constellations</div>
       </div>
       
       <p style={{ marginTop: '30px', fontSize: '13px', color: '#888', letterSpacing: '1px' }}>

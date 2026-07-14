@@ -30,6 +30,7 @@ import Voyager from './components/Voyager';
 import Pulsar from './components/Pulsar';
 import Supernova from './components/Supernova';
 import RelativityManager from './components/RelativityManager';
+import Constellations from './components/Constellations';
 
 function GlobalTimeTracker() {
   useFrame((state, delta) => {
@@ -48,6 +49,26 @@ function App() {
       useStore.getState().setNasaImages(images);
       useStore.getState().setNasaImagesLoaded(true);
     });
+
+    const handleKeyDown = (e) => {
+      if (e.key.toLowerCase() === 'c') {
+        useStore.getState().setShowConstellations(true);
+      }
+    };
+    
+    const handleKeyUp = (e) => {
+      if (e.key.toLowerCase() === 'c') {
+        useStore.getState().setShowConstellations(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
   }, []);
   
   return (
@@ -66,6 +87,7 @@ function App() {
       <RelativityManager astronautRef={astronautRef} />
       <Suspense fallback={null}>
         <Starfield />
+        <Constellations />
         <DistantGalaxies />
         <ShootingStars astronautRef={astronautRef} />
         <Comets />
@@ -75,13 +97,13 @@ function App() {
         <BlackHole astronautRef={astronautRef} />
       
       {/* Phase 8: Pulsar */}
-      <Pulsar position={[-3000, 300, -3000]} astronautRef={astronautRef} />
+      <Pulsar position={[6000, 1500, -6000]} astronautRef={astronautRef} />
 
       {/* Phase 10: Supernova Remnant */}
-      <Supernova position={[5200, 520, 7200]} />
+      <Supernova position={[-5000, -2000, -7000]} />
 
       {/* Easter Egg / Phase 2: Voyager 1 */}
-      <Voyager position={[1500, 50, -2000]} astronautRef={astronautRef} />
+      <Voyager position={[3000, -500, -2000]} astronautRef={astronautRef} />
         <MuseumSystem astronautRef={astronautRef} />
         <NebulaCloud />
         <MonolithGallery />

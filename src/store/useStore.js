@@ -18,6 +18,8 @@ export const useStore = create((set) => ({
   setTimeScale: (val) => set({ timeScale: val }),
 
   relativityIntensity: 0.0,
+  showConstellations: false,
+  setShowConstellations: (show) => set({ showConstellations: show }),
   setRelativityIntensity: (val) => set({ relativityIntensity: val }),
 
   movement: {

@@ -30,8 +30,8 @@ void main() {
   // Intense cyan to pure white core
   vec3 color = mix(vec3(0.0, 0.8, 1.0), vec3(1.0, 1.0, 1.0), n);
   
-  // Extreme intensity to trigger heavy bloom
-  gl_FragColor = vec4(color * 4.0, 1.0);
+  // Moderate intensity so it doesn't over-bloom into a giant egg
+  gl_FragColor = vec4(color * 1.8, 1.0);
 }
 `;
 
@@ -52,16 +52,14 @@ void main() {
   // Fade out towards the top of the cone (y=1 is tip, y=0 is base)
   float alpha = smoothstep(1.0, 0.1, vUv.y);
   
-  // Rapid pulsing synchronized with rotation/audio
-  float pulse = (sin(time * pulseRate * 3.14159 * 2.0) * 0.5 + 0.5);
-  
-  // Soft edges horizontally
+  // Soft edges horizontally (vUv.x goes 0 to 1 around the cylinder)
   float edge = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
   
   // Bright cyan/blue
-  vec3 color = vec3(0.0, 0.7, 1.0); 
+  vec3 color = vec3(0.0, 0.8, 1.0); 
   
-  gl_FragColor = vec4(color * 5.0 * pulse, alpha * edge * pulse * 0.8);
+  // Combine all with a strong glow factor
+  gl_FragColor = vec4(color * 3.0, alpha * edge * 0.8);
 }
 `;
 
@@ -87,8 +85,8 @@ export default function Pulsar({ position, astronautRef }) {
   const audioCtxRef = useRef();
   const synthGainRef = useRef(null);
   
-  const PULSE_RATE = 8.0; // 8 Hz pulsing - very fast, terrifying
-  const ROTATION_SPEED = Math.PI * PULSE_RATE; // Match physical rotation to pulse
+  const PULSE_RATE = 1.5; // Slower so it looks like a sweeping lighthouse beam instead of a blur
+  const ROTATION_SPEED = Math.PI * PULSE_RATE * 2.0; // Match physical rotation to pulse
 
   // Audio setup
   useEffect(() => {
@@ -210,51 +208,54 @@ export default function Pulsar({ position, astronautRef }) {
     <group position={position} ref={groupRef}>
       {/* Neutron Star Core */}
       <mesh>
-        <sphereGeometry args={[8, 32, 32]} />
+        <sphereGeometry args={[3, 32, 32]} />
         <shaderMaterial 
           ref={coreMatRef}
           vertexShader={coreVert}
           fragmentShader={coreFrag}
           uniforms={{ time: { value: 0 } }}
         />
-        <pointLight intensity={8.0} color="#00e5ff" distance={800} decay={1.5} />
+        <pointLight intensity={8.0} color="#00e5ff" distance={1500} decay={1.5} />
       </mesh>
 
-      {/* Radiation Beam - North Pole */}
-      <mesh position={[0, 50, 0]}>
-        <cylinderGeometry args={[2, 20, 100, 32, 1, true]} />
-        <shaderMaterial 
-          ref={beamMatRef}
-          vertexShader={beamVert}
-          fragmentShader={beamFrag}
-          uniforms={{ 
-            time: { value: 0 },
-            pulseRate: { value: PULSE_RATE } 
-          }}
-          transparent={true}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
+      {/* Magnetic Axis (Tilted relative to rotation axis) */}
+      <group rotation={[0, 0, Math.PI / 12]}>
+        {/* Radiation Beam - North Pole */}
+        <mesh position={[0, 300, 0]}>
+          <cylinderGeometry args={[0, 40, 600, 32, 1, true]} />
+          <shaderMaterial 
+            ref={beamMatRef}
+            vertexShader={beamVert}
+            fragmentShader={beamFrag}
+            uniforms={{ 
+              time: { value: 0 },
+              pulseRate: { value: PULSE_RATE } 
+            }}
+            transparent={true}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
 
-      {/* Radiation Beam - South Pole */}
-      <mesh position={[0, -50, 0]} rotation={[Math.PI, 0, 0]}>
-        <cylinderGeometry args={[2, 20, 100, 32, 1, true]} />
-        <shaderMaterial 
-          ref={beamMatRef2}
-          vertexShader={beamVert}
-          fragmentShader={beamFrag}
-          uniforms={{ 
-            time: { value: 0 },
-            pulseRate: { value: PULSE_RATE } 
-          }}
-          transparent={true}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
+        {/* Radiation Beam - South Pole */}
+        <mesh position={[0, -300, 0]} rotation={[Math.PI, 0, 0]}>
+          <cylinderGeometry args={[0, 40, 600, 32, 1, true]} />
+          <shaderMaterial 
+            ref={beamMatRef2}
+            vertexShader={beamVert}
+            fragmentShader={beamFrag}
+            uniforms={{ 
+              time: { value: 0 },
+              pulseRate: { value: PULSE_RATE } 
+            }}
+            transparent={true}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      </group>
 
       <InfoPanel planet={pulsarData} />
       <Waypoint planet={pulsarData} />

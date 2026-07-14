@@ -124,6 +124,14 @@ export default function MobileControls() {
         >
           WARP
         </button>
+        <button 
+          className="action-btn constellation-btn"
+          onTouchStart={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(true); }}
+          onTouchEnd={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
+          onTouchCancel={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
+        >
+          STARS
+        </button>
       </div>
     </div>
   );
