@@ -26,7 +26,7 @@ Instead of an intense game or overwhelming simulation, it's a **space museum you
 **The core experience:**
 
 ```
-Spawn near Earth → Explore the Solar System → Approach Planets for Info → Engage Warp Travel → Drift
+Spawn near Earth → Explore the Solar System → Track Deep Space Probes → Approach for Info → Engage Warp Travel
 ```
 
 ---
@@ -39,10 +39,12 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 | **The Solar System Museum** | Tour all 8 fully-textured major planets in accurately sequenced orbits from the glowing Sun. |
 | **Dynamic Audio Engine** | Synthesized Web Audio API soundscapes featuring muffled standard thrusters and intense warp-drive acoustic feedback. |
 | **Mobile Responsiveness** | Seamlessly explore on touch-screens using a custom virtual joystick, swipe-to-look camera panning, and touch action buttons. |
-| **Diegetic UI** | Facts about planets and celestial bodies appear seamlessly within the 3D world as you approach them using Three.js HTML. |
+| **Diegetic UI** | Facts about planets and celestial bodies appear seamlessly within the 3D world as you approach them. |
+| **Radar Minimap** | A circular HUD minimap that tracks the relative positions of planets and spacecraft around you in real-time. |
 | **Deep Space Gallery** | Traverse a volumetric procedural nebula to discover massive monoliths displaying real-time imagery from the NASA APOD API. |
 | **Warp Travel & Zoom** | Hold `Shift` (or Warp button) to traverse massive distances, and use the scroll wheel to zoom the camera dynamically. |
 | **Gargantua Black Hole** | A massive, photorealistic black hole using custom raymarched shaders to simulate gravitational lensing and a glowing accretion disk. |
+| **ISRO Spacecraft** | A fully 3D procedurally modeled Indian Space Research Organisation (ISRO) deep-space probe featuring interactive waypoint tracking and official decals. |
 | **Cinematic Rendering** | Built with custom GLSL shaders, physically-based materials, Unreal Bloom, and cinematic camera tracking. |
 
 ---
@@ -55,7 +57,7 @@ Spawn near Earth → Explore the Solar System → Approach Planets for Info → 
 │  React 18 · Vite · Zustand · React Three Fiber          │
 │                                                         │
 │  src/                                                   │
-│  ├── components/  (3D Models, Planets, NavigationArrow) │
+│  ├── components/  (3D Models, Planets, ISROSpaceship)  │
 │  ├── ui/          (MobileControls, Info Panels)         │
 │  ├── store/       (Global state, movement tracking)     │
 │  ├── hooks/       (useMovement, useProximity logic)     │
@@ -131,20 +133,11 @@ The game automatically adapts to desktop (Keyboard/Mouse) or mobile devices (Tou
 | **Ascend/Descend** | `Space` / `Ctrl` (or `C`) | `▲` / `▼` Action Buttons |
 | **Warp Travel (Boost)** | Hold `Shift` while moving | `WARP` Action Button |
 | **Navigation HUD** | 3D Arrow | N/A |
+| **Radar Tracking** | Minimap HUD | Minimap HUD |
 
 ---
 
-## Project Roadmap
 
-Sleepwalk is being built in distinct cinematic phases:
-
-- [x] **Phase 1: Foundation & The Astronaut** - Zero-g controls, chase camera, cinematic intro, Earth, and basic post-processing.
-- [x] **Phase 2: The Solar System Museum** - All 8 planets correctly sequenced, custom animated Sun shader, diegetic info panels, and minimap UI.
-- [x] **Phase 2.5: Immersion Update** - Real-time synthesized thruster audio engine and fully responsive touchscreen mobile controls.
-- [x] **Phase 3: The Nebula Passage & Deep Space Gallery** - Volumetric dust fields and giant floating image monoliths pulling live data from NASA's APIs (Hubble/James Webb).
-- [x] **Phase 4: The Black Hole & Final Polish** - A massive raymarched black hole with gravitational lensing and performance optimization.
-
----
 
 ## License
 

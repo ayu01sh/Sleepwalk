@@ -23,6 +23,7 @@ import MobileControls from './ui/MobileControls';
 import WaypointHUD from './ui/WaypointHUD';
 import QualityToggle from './ui/QualityToggle';
 import MinimapHUD from './ui/MinimapHUD';
+import VisorHUD from './ui/VisorHUD';
 
 function App() {
   const astronautRef = useRef();
@@ -76,6 +77,7 @@ function App() {
     <MinimapHUD astronautRef={astronautRef} />
     <QualityToggle />
     <MobileControls />
+    <VisorHUD />
     <AudioEngine astronautRef={astronautRef} />
     </>
   );

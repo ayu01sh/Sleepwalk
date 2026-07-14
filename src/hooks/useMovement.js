@@ -34,6 +34,9 @@ export function useMovement() {
         case 'ShiftRight':
           setMovement('boost', true);
           break;
+        case 'KeyV':
+          useStore.getState().toggleFirstPerson();
+          break;
         default:
           break;
       }

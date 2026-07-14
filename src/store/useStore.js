@@ -8,6 +8,9 @@ export const useStore = create((set) => ({
   showControlsHint: false,
   setShowControlsHint: (v) => set({ showControlsHint: v }),
 
+  isFirstPerson: false,
+  toggleFirstPerson: () => set((state) => ({ isFirstPerson: !state.isFirstPerson })),
+
   nearestPlanet: null,
   setNearestPlanet: (id) => set({ nearestPlanet: id }),
 

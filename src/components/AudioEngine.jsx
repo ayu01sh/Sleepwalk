@@ -6,9 +6,11 @@ import { BLACK_HOLE_POSITION } from './BlackHole';
 export default function AudioEngine({ astronautRef }) {
   const introComplete = useStore(state => state.introComplete);
   const inNebulaZone = useStore(state => state.inNebulaZone);
+  const isFirstPerson = useStore(state => state.isFirstPerson);
   const audioCtxRef = useRef(null);
   
   // Audio nodes
+  const masterFilterRef = useRef(null);
   const droneGainRef = useRef(null);
   const thrusterFilterRef = useRef(null);
   const thrusterGainRef = useRef(null);
@@ -25,10 +27,17 @@ export default function AudioEngine({ astronautRef }) {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     audioCtxRef.current = ctx;
 
+    // Master filter for muffling external sounds in 1st person
+    const masterFilter = ctx.createBiquadFilter();
+    masterFilter.type = 'lowpass';
+    masterFilter.frequency.value = 20000;
+    masterFilter.connect(ctx.destination);
+    masterFilterRef.current = masterFilter;
+
     // --- 1. Ambient Drone (Nebula) ---
     const droneGain = ctx.createGain();
     droneGain.gain.value = 0; // start silent
-    droneGain.connect(ctx.destination);
+    droneGain.connect(masterFilter);
     droneGainRef.current = droneGain;
 
     const osc1 = ctx.createOscillator();
@@ -77,7 +86,7 @@ export default function AudioEngine({ astronautRef }) {
 
     const thrusterGain = ctx.createGain();
     thrusterGain.gain.value = 0; // Start silent
-    thrusterGain.connect(ctx.destination);
+    thrusterGain.connect(masterFilter);
     thrusterGainRef.current = thrusterGain;
 
     noiseSource.connect(thrusterFilter);
@@ -87,7 +96,7 @@ export default function AudioEngine({ astronautRef }) {
     // --- 3. Black Hole Drone (Dynamic) ---
     const bhGain = ctx.createGain();
     bhGain.gain.value = 0; // Start silent
-    bhGain.connect(ctx.destination);
+    bhGain.connect(masterFilter);
     bhDroneGainRef.current = bhGain;
 
     const bhDistortion = ctx.createWaveShaper();
@@ -221,6 +230,21 @@ export default function AudioEngine({ astronautRef }) {
 
     return () => cancelAnimationFrame(animationFrameId);
   }, [introComplete, astronautRef]);
+
+  // Hook for First Person Audio (Muffling)
+  useEffect(() => {
+    if (!audioCtxRef.current || !masterFilterRef.current) return;
+    const ctx = audioCtxRef.current;
+    const t = ctx.currentTime;
+    
+    if (isFirstPerson) {
+      // Muffle external sounds
+      masterFilterRef.current.frequency.setTargetAtTime(800, t, 0.5);
+    } else {
+      // Open filter
+      masterFilterRef.current.frequency.setTargetAtTime(20000, t, 0.5);
+    }
+  }, [isFirstPerson]);
 
   return null;
 }
