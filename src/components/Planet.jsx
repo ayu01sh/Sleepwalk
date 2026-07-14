@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import InfoPanel from './InfoPanel';
 import Waypoint from './Waypoint';
 import { getOrbitPosition } from '../utils/orbits';
+import Moon from './Moon';
 
 export default function Planet({ data }) {
   const meshRef = useRef();
@@ -44,20 +45,25 @@ export default function Planet({ data }) {
       </mesh>
 
       {/* Saturn's Rings */}
-      {data.hasRings && texMap.ringAlpha && (
-        <mesh rotation={[-Math.PI / 2 + 0.3, 0, 0]}>
-          <ringGeometry args={[data.ringRadius[0], data.ringRadius[1], 128]} />
-          <meshBasicMaterial 
-            map={texMap.albedo} // Using albedo map for ring color for now
+      {data.hasRings && (
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[data.ringRadius[0], data.ringRadius[1], 64]} />
+          <meshStandardMaterial 
+            map={texMap.albedo}
             alphaMap={texMap.ringAlpha}
             transparent={true}
             side={THREE.DoubleSide}
-            opacity={0.8}
-            depthWrite={false}
+            roughness={0.8}
           />
         </mesh>
       )}
 
+      {/* Moons */}
+      {data.moons && data.moons.map((moonData) => (
+        <Moon key={moonData.id} data={moonData} />
+      ))}
+
+      {/* Interactive UI Panels */}
       <InfoPanel planet={data} />
       <Waypoint planet={data} />
     </group>

@@ -7,6 +7,7 @@ import Waypoint from './Waypoint';
 import { planets } from '../data/planets';
 import Aurora from './Aurora';
 import { getOrbitPosition } from '../utils/orbits';
+import Moon from './Moon';
 
 const atmosphereVert = `
 varying vec3 vNormal;
@@ -97,6 +98,11 @@ export default function Earth() {
 
       {/* 4. Polar Auroras */}
       <Aurora />
+
+      {/* 5. Moons */}
+      {earthData.moons && earthData.moons.map((moonData) => (
+        <Moon key={moonData.id} data={moonData} />
+      ))}
 
       <InfoPanel planet={planets.find(p => p.id === 'earth')} />
       <Waypoint planet={planets.find(p => p.id === 'earth')} />
