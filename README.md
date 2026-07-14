@@ -45,6 +45,9 @@ Spawn near Earth → Explore the Solar System → Track Deep Space Probes → Ap
 | **Warp Travel & Zoom** | Hold `Shift` (or Warp button) to traverse massive distances, and use the scroll wheel to zoom the camera dynamically. |
 | **Gargantua Black Hole** | A massive, photorealistic black hole using custom raymarched shaders to simulate gravitational lensing and a glowing accretion disk. |
 | **ISRO Spacecraft** | A fully 3D procedurally modeled Indian Space Research Organisation (ISRO) deep-space probe featuring interactive waypoint tracking and official decals. |
+| **Pulsar Anomaly** | A terrifyingly fast-spinning neutron star with procedural radiation beams and synchronized audio. |
+| **Supernova Remnant** | A colossal volumetric gas cloud generated using custom shaders and additive blending particles. |
+| **Dynamic Loading Screen** | A smooth, interpolated loading screen and controls overlay built natively within the 3D rendering loop. |
 | **Cinematic Rendering** | Built with custom GLSL shaders, physically-based materials, Unreal Bloom, and cinematic camera tracking. |
 
 ---
