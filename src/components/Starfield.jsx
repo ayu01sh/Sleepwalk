@@ -9,24 +9,24 @@ export default function Starfield() {
 
   return (
     <>
-      {/* Universal Starfield covering the entire map (Sun to Black Hole) */}
-      <group position={[1500, 0, 1500]}>
+      {/* Universal Starfield covering the entire map (from Nebula to Black Hole) */}
+      <group position={[0, -500, -2000]}>
         {/* Core stars filling the entire volume */}
         <Stars 
-          radius={50} 
-          depth={6000} 
+          radius={100} 
+          depth={18000} 
           count={coreCount} 
-          factor={4} 
+          factor={7} 
           saturation={0} 
           fade 
           speed={0.5} 
         />
         {/* Colorful deep space background stars mixed throughout */}
         <Stars 
-          radius={50} 
-          depth={6000} 
+          radius={100} 
+          depth={18000} 
           count={bgCount} 
-          factor={6} 
+          factor={10} 
           saturation={0.8} 
           fade 
           speed={0.2} 
