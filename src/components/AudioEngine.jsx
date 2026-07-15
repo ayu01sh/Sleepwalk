@@ -155,54 +155,32 @@ export default function AudioEngine({ astronautRef }) {
     }
   }, [inNebulaZone]);
 
-  // Hook into keyboard events to trigger thruster sounds
+  const movement = useStore(state => state.movement);
+
+  // Hook to trigger thruster sounds based on movement state
   useEffect(() => {
-    if (!introComplete) return;
+    if (!introComplete || !audioCtxRef.current || !thrusterGainRef.current || !thrusterFilterRef.current) return;
+    
+    const ctx = audioCtxRef.current;
+    const t = ctx.currentTime;
+    
+    const isWarping = movement.boost;
+    const isMoving = movement.forward || movement.backward || movement.left || movement.right || movement.ascend || movement.descend;
 
-    let isWarping = false;
-    let isMoving = false;
-
-    const handleKeyDown = (e) => {
-      if (e.key === 'Shift') isWarping = true;
-      if (['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) isMoving = true;
-      updateThrusters();
-    };
-
-    const handleKeyUp = (e) => {
-      if (e.key === 'Shift') isWarping = false;
-      if (['w', 'a', 's', 'd'].includes(e.key.toLowerCase())) isMoving = false;
-      updateThrusters();
-    };
-
-    const updateThrusters = () => {
-      if (!audioCtxRef.current || !thrusterGainRef.current || !thrusterFilterRef.current) return;
-      
-      const ctx = audioCtxRef.current;
-      const t = ctx.currentTime;
-
-      if (isMoving && isWarping) {
-        // Full warp sound
-        thrusterGainRef.current.gain.setTargetAtTime(0.3, t, 0.1);
-        thrusterFilterRef.current.frequency.setTargetAtTime(1200 * useStore.getState().timeScale, t, 0.2);
-      } else if (isMoving) {
-        // Standard maneuvering thrusters
-        thrusterGainRef.current.gain.setTargetAtTime(0.05, t, 0.1);
-        thrusterFilterRef.current.frequency.setTargetAtTime(400 * useStore.getState().timeScale, t, 0.2);
-      } else {
-        // Idle/silent
-        thrusterGainRef.current.gain.setTargetAtTime(0, t, 0.3);
-        thrusterFilterRef.current.frequency.setTargetAtTime(100, t, 0.3);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
-    };
-  }, [introComplete]);
+    if (isMoving && isWarping) {
+      // Full warp sound
+      thrusterGainRef.current.gain.setTargetAtTime(0.3, t, 0.1);
+      thrusterFilterRef.current.frequency.setTargetAtTime(1200 * useStore.getState().timeScale, t, 0.2);
+    } else if (isMoving) {
+      // Standard maneuvering thrusters
+      thrusterGainRef.current.gain.setTargetAtTime(0.05, t, 0.1);
+      thrusterFilterRef.current.frequency.setTargetAtTime(400 * useStore.getState().timeScale, t, 0.2);
+    } else {
+      // Idle/silent
+      thrusterGainRef.current.gain.setTargetAtTime(0, t, 0.3);
+      thrusterFilterRef.current.frequency.setTargetAtTime(100, t, 0.3);
+    }
+  }, [introComplete, movement]);
 
   // Hook for Black Hole dynamic proximity audio
   useEffect(() => {
