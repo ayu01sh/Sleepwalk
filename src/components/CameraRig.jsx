@@ -49,8 +49,15 @@ export default function CameraRig({ targetRef }) {
 
     // --- Warp FOV Stretching ---
     const targetFov = movement.boost ? WARP_FOV : BASE_FOV;
-    camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 3 * delta);
-    camera.updateProjectionMatrix();
+    
+    // Only recompute the extremely expensive projection matrix if FOV is actually changing
+    if (Math.abs(camera.fov - targetFov) > 0.01) {
+      camera.fov = THREE.MathUtils.lerp(camera.fov, targetFov, 3 * delta);
+      camera.updateProjectionMatrix();
+    } else if (camera.fov !== targetFov) {
+      camera.fov = targetFov;
+      camera.updateProjectionMatrix();
+    }
 
     // 1. Get the character's position (reuse pre-allocated)
     targetRef.current.getWorldPosition(_targetPos.current);

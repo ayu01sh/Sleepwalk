@@ -1,6 +1,8 @@
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import InfoPanel from './InfoPanel';
+import Waypoint from './Waypoint';
 
 const sunVert = `
 varying vec2 vUv;
@@ -75,8 +77,22 @@ export default function Sun() {
     }
   });
 
+  const sunData = {
+    id: 'sun',
+    name: 'The Sun',
+    radius: 32.5,
+    facts: {
+      diameter: '1.39M km',
+      distance: '0 km',
+      description: 'A G-type main-sequence star at the center of the Solar System. It contains 99.8% of the mass in the Solar System.'
+    }
+  };
+
   return (
     <group position={[0, 0, 0]}>
+      {/* Interactive UI Panels */}
+      <InfoPanel planet={sunData} />
+      <Waypoint planet={sunData} />
       <mesh>
         <sphereGeometry args={[32.5, 64, 64]} />
         <shaderMaterial

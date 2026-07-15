@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { Suspense, useRef, useEffect } from 'react';
+import { Suspense, useRef, useEffect, useState } from 'react';
 import { AdaptiveDpr } from '@react-three/drei';
 import * as THREE from 'three';
 import { useStore } from './store/useStore';
@@ -43,8 +43,14 @@ function GlobalTimeTracker() {
 function App() {
   const astronautRef = useRef();
   const quality = useStore(state => state.quality);
+  const [startRender, setStartRender] = useState(false);
 
   useEffect(() => {
+    // Allow the browser to paint the loading screen first before locking the main thread with heavy R3F mounting
+    const timer = setTimeout(() => {
+      setStartRender(true);
+    }, 100);
+
     fetchGalleryImages().then(images => {
       useStore.getState().setNasaImages(images);
       useStore.getState().setNasaImagesLoaded(true);
@@ -53,6 +59,9 @@ function App() {
     const handleKeyDown = (e) => {
       if (e.key.toLowerCase() === 'c') {
         useStore.getState().setShowConstellations(true);
+      }
+      if (e.key.toLowerCase() === 'v') {
+        useStore.getState().toggleFirstPerson();
       }
     };
     
@@ -68,12 +77,14 @@ function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      clearTimeout(timer);
     };
   }, []);
   
   return (
     <>
-    <Canvas
+    {startRender && (
+      <Canvas
       camera={{ fov: 60, near: 0.1, far: 50000, position: [0, 2, 10] }}
       dpr={quality === 'high' ? [1, 2] : [0.5, 1]}
       gl={{ 
@@ -120,6 +131,7 @@ function App() {
         
       </Suspense>
     </Canvas>
+    )}
     <WaypointHUD astronautRef={astronautRef} />
     <MinimapHUD astronautRef={astronautRef} />
     <ControlsOverlay />

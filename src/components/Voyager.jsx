@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import Waypoint from './Waypoint';
+import InfoPanel from './InfoPanel';
 
 export default function Voyager({ position, astronautRef }) {
   const groupRef = useRef();
@@ -65,10 +66,14 @@ export default function Voyager({ position, astronautRef }) {
 
     window.addEventListener('click', initAudio);
     window.addEventListener('keydown', initAudio);
+    window.addEventListener('touchstart', initAudio, { passive: true });
+    window.addEventListener('pointerdown', initAudio, { passive: true });
 
     return () => {
       window.removeEventListener('click', initAudio);
       window.removeEventListener('keydown', initAudio);
+      window.removeEventListener('touchstart', initAudio);
+      window.removeEventListener('pointerdown', initAudio);
       if (ctx) {
         ctx.close();
       }
@@ -109,8 +114,12 @@ export default function Voyager({ position, astronautRef }) {
   const voyagerData = {
     id: 'voyager',
     name: 'Voyager 1',
-    position: position,
     radius: 10,
+    facts: {
+      diameter: '3.66 meters',
+      distance: '24 billion km',
+      description: 'A space probe launched by NASA in 1977. It is the most distant human-made object from Earth, currently in interstellar space.'
+    }
   };
 
   return (
@@ -150,27 +159,8 @@ export default function Voyager({ position, astronautRef }) {
       {/* Soft local illumination */}
       <pointLight position={[5, 5, 5]} intensity={2.0} color="#ffffff" distance={200} />
 
-      {/* Interactive UI Label */}
-      {isNear && (
-        <Html position={[0, 3.5, 0]} center zIndexRange={[100, 0]}>
-          <div style={{
-            background: 'rgba(10, 10, 15, 0.85)',
-            border: '1px solid #ffd700',
-            padding: '12px 20px',
-            borderRadius: '6px',
-            color: '#ffd700',
-            fontFamily: 'monospace',
-            whiteSpace: 'nowrap',
-            boxShadow: '0 0 20px rgba(255, 215, 0, 0.2)',
-            backdropFilter: 'blur(4px)',
-            pointerEvents: 'none'
-          }}>
-            <h3 style={{ margin: '0 0 8px 0', fontSize: '16px', letterSpacing: '2px' }}>VOYAGER 1</h3>
-            <p style={{ margin: '0 0 4px 0', fontSize: '11px', opacity: 0.9 }}>STATUS: INTERSTELLAR</p>
-            <p style={{ margin: 0, fontSize: '11px', opacity: 0.7 }}>TRANSMITTING: THE SOUNDS OF EARTH</p>
-          </div>
-        </Html>
-      )}
+      {/* Interactive UI Panels */}
+      <InfoPanel planet={voyagerData} />
       <Waypoint planet={voyagerData} />
     </group>
   );

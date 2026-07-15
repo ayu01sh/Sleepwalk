@@ -5,19 +5,22 @@ export default function MobileControls() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const introComplete = useStore((state) => state.introComplete);
   const setMovement = useStore((state) => state.setMovement);
+  const showConstellations = useStore((state) => state.showConstellations);
   
   const joystickBaseRef = useRef(null);
   const [joystickPos, setJoystickPos] = useState({ x: 0, y: 0 });
   const activeTouchId = useRef(null);
 
-  // Detect touch devices
+  // Detect if actually a mobile device, not just a touch-capable desktop monitor
   useEffect(() => {
-    const checkTouch = () => {
-      setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window);
+    const checkMobile = () => {
+      const isMobilePhone = typeof window !== 'undefined' && 
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsTouchDevice(isMobilePhone);
     };
-    checkTouch();
-    window.addEventListener('resize', checkTouch);
-    return () => window.removeEventListener('resize', checkTouch);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   if (!isTouchDevice || !introComplete) return null;
@@ -118,10 +121,12 @@ export default function MobileControls() {
       <div className="action-buttons-zone">
         <button 
           className="action-btn constellation-btn"
-          onTouchStart={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(true); }}
-          onTouchEnd={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
-          onTouchCancel={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
-          style={{ fontSize: '24px' }}
+          onTouchStart={(e) => { 
+            e.preventDefault(); 
+            const store = useStore.getState();
+            store.setShowConstellations(!store.showConstellations); 
+          }}
+          style={{ fontSize: '17px', background: showConstellations ? 'rgba(0, 229, 255, 0.4)' : 'rgba(10, 16, 25, 0.8)' }}
         >
           ⭐
         </button>

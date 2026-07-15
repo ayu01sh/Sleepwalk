@@ -16,22 +16,17 @@ void main() {
 
 const coreFrag = `
 uniform float time;
-varying vec2 vUv;
 varying vec3 vPosition;
 
-float noise(vec3 p) {
-  return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453);
-}
-
 void main() {
-  // Swirling, rapidly changing plasma
-  float n = noise(vPosition * 15.0 + time * 10.0);
+  // Just a very bright intense sphere with slight pulsing
+  float pulse = sin(time * 10.0) * 0.1 + 0.9;
   
-  // Intense cyan to pure white core
-  vec3 color = mix(vec3(0.0, 0.8, 1.0), vec3(1.0, 1.0, 1.0), n);
+  // Almost pure white in center, cyan edge
+  float dist = length(vPosition) / 1.5; // assuming radius 1.5
+  vec3 color = mix(vec3(1.0, 1.0, 1.0), vec3(0.0, 0.8, 1.0), smoothstep(0.5, 1.0, dist));
   
-  // Moderate intensity so it doesn't over-bloom into a giant egg
-  gl_FragColor = vec4(color * 1.8, 1.0);
+  gl_FragColor = vec4(color * 4.0 * pulse, 1.0);
 }
 `;
 
@@ -49,17 +44,67 @@ uniform float pulseRate;
 varying vec2 vUv;
 
 void main() {
-  // Fade out towards the top of the cone (y=1 is tip, y=0 is base)
-  float alpha = smoothstep(1.0, 0.1, vUv.y);
+  // Fade out towards the top of the cylinder (y=1 is tip, y=0 is base)
+  float alpha = smoothstep(1.0, 0.05, vUv.y);
   
   // Soft edges horizontally (vUv.x goes 0 to 1 around the cylinder)
   float edge = smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x);
   
-  // Bright cyan/blue
-  vec3 color = vec3(0.0, 0.8, 1.0); 
+  // Vertical streaks
+  float streak = sin(vUv.x * 80.0 + time * 30.0) * sin(vUv.x * 33.0 - time * 25.0);
+  float streakIntensity = streak * 0.5 + 0.5;
+  
+  // Bright cyan/blue/white
+  vec3 baseColor = vec3(0.0, 0.6, 1.0); 
+  vec3 coreColor = vec3(1.0, 1.0, 1.0);
+  vec3 color = mix(baseColor, coreColor, streakIntensity * 0.6 + (1.0 - vUv.y) * 0.5);
+  
+  // Central bright core of the beam
+  float centerGlow = smoothstep(0.2, 0.5, vUv.x) * smoothstep(0.8, 0.5, vUv.x);
   
   // Combine all with a strong glow factor
-  gl_FragColor = vec4(color * 3.0, alpha * edge * 0.8);
+  gl_FragColor = vec4(color * (3.0 + centerGlow * 4.0), alpha * (edge * 0.3 + centerGlow * 0.8) * (streakIntensity * 0.8 + 0.2));
+}
+`;
+
+const diskVert = `
+varying vec3 vPosition;
+void main() {
+  vPosition = position;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+
+const diskFrag = `
+uniform float time;
+varying vec3 vPosition;
+
+void main() {
+  // RingGeometry lies on XY plane, dist is from center
+  float dist = length(vPosition.xy);
+  
+  // Normalize dist between inner radius (2) and outer radius (35)
+  float normDist = (dist - 2.0) / 33.0; 
+  if (normDist < 0.0 || normDist > 1.0) discard;
+  
+  float angle = atan(vPosition.y, vPosition.x);
+  
+  // Create spiral bands
+  float spiral = sin(angle * 6.0 - normDist * 25.0 + time * 8.0);
+  float spiral2 = sin(angle * 13.0 - normDist * 35.0 + time * 14.0);
+  
+  float noiseVal = (spiral * 0.6 + spiral2 * 0.4);
+  
+  // Fade at inner and outer edges
+  float alpha = smoothstep(1.0, 0.7, normDist) * smoothstep(0.0, 0.1, normDist);
+  
+  vec3 baseColor = vec3(0.0, 0.3, 0.8);
+  vec3 highlight = vec3(0.4, 1.0, 1.0);
+  vec3 color = mix(baseColor, highlight, noiseVal * 0.5 + 0.5);
+  
+  float glow = pow(noiseVal * 0.5 + 0.5, 2.0);
+  
+  gl_FragColor = vec4(color * (1.5 + glow * 2.0), alpha * (0.3 + glow * 0.7));
 }
 `;
 
@@ -81,6 +126,7 @@ export default function Pulsar({ position, astronautRef }) {
   const coreMatRef = useRef();
   const beamMatRef = useRef();
   const beamMatRef2 = useRef();
+  const diskMatRef = useRef();
   
   const audioCtxRef = useRef();
   const synthGainRef = useRef(null);
@@ -149,10 +195,14 @@ export default function Pulsar({ position, astronautRef }) {
 
     window.addEventListener('click', initAudio);
     window.addEventListener('keydown', initAudio);
+    window.addEventListener('touchstart', initAudio, { passive: true });
+    window.addEventListener('pointerdown', initAudio, { passive: true });
 
     return () => {
       window.removeEventListener('click', initAudio);
       window.removeEventListener('keydown', initAudio);
+      window.removeEventListener('touchstart', initAudio);
+      window.removeEventListener('pointerdown', initAudio);
       if (ctx) ctx.close();
     };
   }, []);
@@ -175,6 +225,9 @@ export default function Pulsar({ position, astronautRef }) {
     }
     if (beamMatRef2.current) {
       beamMatRef2.current.uniforms.time.value = time;
+    }
+    if (diskMatRef.current) {
+      diskMatRef.current.uniforms.time.value = time;
     }
 
     // Audio distance attenuation
@@ -206,23 +259,38 @@ export default function Pulsar({ position, astronautRef }) {
 
   return (
     <group position={position} ref={groupRef}>
+      {/* Accretion Disk */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[2, 35, 64]} />
+        <shaderMaterial 
+          ref={diskMatRef}
+          vertexShader={diskVert}
+          fragmentShader={diskFrag}
+          uniforms={{ time: { value: 0 } }}
+          transparent={true}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
       {/* Neutron Star Core */}
       <mesh>
-        <sphereGeometry args={[3, 32, 32]} />
+        <sphereGeometry args={[1.5, 32, 32]} />
         <shaderMaterial 
           ref={coreMatRef}
           vertexShader={coreVert}
           fragmentShader={coreFrag}
           uniforms={{ time: { value: 0 } }}
         />
-        <pointLight intensity={8.0} color="#00e5ff" distance={1500} decay={1.5} />
+        <pointLight intensity={10.0} color="#00e5ff" distance={1500} decay={1.5} />
       </mesh>
 
       {/* Magnetic Axis (Tilted relative to rotation axis) */}
       <group rotation={[0, 0, Math.PI / 12]}>
         {/* Radiation Beam - North Pole */}
         <mesh position={[0, 300, 0]}>
-          <cylinderGeometry args={[0, 40, 600, 32, 1, true]} />
+          <cylinderGeometry args={[15, 1.5, 600, 32, 1, true]} />
           <shaderMaterial 
             ref={beamMatRef}
             vertexShader={beamVert}
@@ -240,7 +308,7 @@ export default function Pulsar({ position, astronautRef }) {
 
         {/* Radiation Beam - South Pole */}
         <mesh position={[0, -300, 0]} rotation={[Math.PI, 0, 0]}>
-          <cylinderGeometry args={[0, 40, 600, 32, 1, true]} />
+          <cylinderGeometry args={[15, 1.5, 600, 32, 1, true]} />
           <shaderMaterial 
             ref={beamMatRef2}
             vertexShader={beamVert}
