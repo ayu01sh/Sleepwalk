@@ -11,14 +11,16 @@ export default function MobileControls() {
   const [joystickPos, setJoystickPos] = useState({ x: 0, y: 0 });
   const activeTouchId = useRef(null);
 
-  // Detect touch devices
+  // Detect if actually a mobile device, not just a touch-capable desktop monitor
   useEffect(() => {
-    const checkTouch = () => {
-      setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window);
+    const checkMobile = () => {
+      const isMobilePhone = typeof window !== 'undefined' && 
+        /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsTouchDevice(isMobilePhone);
     };
-    checkTouch();
-    window.addEventListener('resize', checkTouch);
-    return () => window.removeEventListener('resize', checkTouch);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   if (!isTouchDevice || !introComplete) return null;

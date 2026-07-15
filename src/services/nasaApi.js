@@ -2,12 +2,12 @@ const NASA_API_KEY = import.meta.env.VITE_NASA_API_KEY || 'DEMO_KEY';
 
 // CORS-friendly space images from Unsplash (these always work as WebGL textures)
 const corsImages = [
-  'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1464802686167-b939a6910659?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1536697246787-1f27d3540d46?q=80&w=1200&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f41?q=80&w=1200&auto=format&fit=crop',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Eagle_nebula_pillars.jpg/800px-Eagle_nebula_pillars.jpg',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/NGC_3372_by_CTIO.jpg/800px-NGC_3372_by_CTIO.jpg',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/800px-Andromeda_Galaxy_%28with_h-alpha%29.jpg',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg/800px-Orion_Nebula_-_Hubble_2006_mosaic_18000.jpg',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Crab_Nebula.jpg/800px-Crab_Nebula.jpg',
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg/800px-NASA-HS201427a-HubbleUltraDeepField2014-20140603.jpg',
 ];
 
 const fallbackImages = [
@@ -51,7 +51,7 @@ const fallbackImages = [
 
 export async function fetchGalleryImages() {
   try {
-    const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}&count=60`);
+    const response = await fetch(`https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}&count=100`);
     
     if (!response.ok) {
       console.warn('NASA API fetch failed, using fallback images.', response.status);
@@ -74,14 +74,18 @@ export async function fetchGalleryImages() {
     });
     
     if (imageResults.length >= 50) {
-      // Use NASA metadata (title, explanation, date) but pair with CORS-safe images
-      // This gives us real NASA descriptions while ensuring textures always load
-      return imageResults.slice(0, 50).map((img, i) => ({
-        title: img.title,
-        url: corsImages[i % corsImages.length],
-        explanation: img.explanation,
-        date: img.date,
-      }));
+      // Use actual NASA images but proxy them through a CORS proxy to bypass 'Access-Control-Allow-Origin' errors
+      return imageResults.slice(0, 50).map((img) => {
+        const targetUrl = img.hdurl || img.url;
+        // Use allorigins raw proxy to add CORS headers to the NASA images
+        const proxiedUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
+        return {
+          title: img.title,
+          url: proxiedUrl,
+          explanation: img.explanation,
+          date: img.date,
+        };
+      });
     } else {
       console.warn('Not enough valid image results from NASA API, using fallbacks.');
       // Make sure fallback provides at least 50 by repeating if necessary
