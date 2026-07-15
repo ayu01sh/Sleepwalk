@@ -1,7 +1,7 @@
 <p align="center">
   <h1 align="center">Sleepwalk</h1>
   <p align="center">
-    A quiet, cinematic 3D space museum built for the browser.
+    A quiet, cinematic 3D space exploration experience built natively for the browser.
   </p>
 </p>
 
@@ -39,15 +39,16 @@ Spawn near Earth → Explore the Solar System → Track Deep Space Probes → Ap
 | **The Solar System Museum** | Tour all 8 fully-textured major planets in accurately sequenced orbits from the glowing Sun. |
 | **Dynamic Audio Engine** | Synthesized Web Audio API soundscapes featuring muffled standard thrusters and intense warp-drive acoustic feedback. |
 | **Mobile Responsiveness** | Seamlessly explore on touch-screens using a custom virtual joystick, swipe-to-look camera panning, and touch action buttons. |
-| **Diegetic UI** | Facts about planets and celestial bodies appear seamlessly within the 3D world as you approach them. |
+| **Universal InfoPanels & Waypoints** | Approaching massive cosmic entities (Planets, The Sun, Supernovae, Voyager) seamlessly triggers interactive diegetic UI overlays. |
 | **Radar Minimap** | A circular HUD minimap that tracks the relative positions of planets and spacecraft around you in real-time. |
 | **Deep Space Gallery** | Traverse a volumetric procedural nebula to discover massive monoliths displaying real-time imagery from the NASA APOD API. |
-| **Warp Travel & Zoom** | Hold `Shift` (or Warp button) to traverse massive distances, and use the scroll wheel to zoom the camera dynamically. |
+| **Warp Travel & Zoom** | Hold `Shift` (or Warp button) to traverse massive distances with a hyperdrive FOV stretch, and use the scroll wheel to zoom the camera. |
 | **Gargantua Black Hole** | A massive, photorealistic black hole using custom raymarched shaders to simulate gravitational lensing and a glowing accretion disk. |
-| **ISRO Spacecraft** | A fully 3D procedurally modeled Indian Space Research Organisation (ISRO) deep-space probe featuring interactive waypoint tracking and official decals. |
+| **ISRO Spacecraft & Voyager 1** | Fully 3D procedurally modeled deep-space probes featuring interactive waypoint tracking and official decals. |
 | **Pulsar Anomaly** | A terrifyingly fast-spinning neutron star with procedural radiation beams and synchronized audio. |
 | **Supernova Remnant** | A colossal volumetric gas cloud generated using custom shaders and additive blending particles. |
-| **Dynamic Loading Screen** | A smooth, interpolated loading screen and controls overlay built natively within the 3D rendering loop. |
+| **Constellation Overlay** | Hold `C` to reveal a sprawling stellar constellation map overlaid onto the background stars. |
+| **First-Person Visor Mode** | Press `V` to toggle into a first-person immersive helmet view complete with an internal HUD overlay. |
 | **Cinematic Rendering** | Built with custom GLSL shaders, physically-based materials, Unreal Bloom, and cinematic camera tracking. |
 
 ---
@@ -82,20 +83,7 @@ Spawn near Earth → Explore the Solar System → Track Deep Space Probes → Ap
 - **React Three Fiber**: Bridging the declarative nature of React with the imperative Three.js API allows us to build complex 3D scenes as reusable components (`<Earth />`, `<Sun />`).
 - **Zustand over Context**: Used for high-frequency state updates (like movement vectors from the mobile joystick) without triggering cascading React re-renders, crucial for 60FPS.
 - **Synthesized Audio**: Using the native Web Audio API to synthesize thruster noises prevents the need to load heavy `.mp3` assets, ensuring instant playback.
-- **Custom Shaders**: The Sun uses a custom fractal noise vertex/fragment shader instead of a standard texture, providing a dynamic, boiling surface that interacts beautifully with post-processing bloom.
-
----
-
-## Tech Stack
-
-| Layer | Technologies |
-|-------|-------------|
-| **Framework** | React 18, Vite |
-| **3D Engine** | Three.js, React Three Fiber (R3F), `@react-three/drei` |
-| **State Management** | Zustand |
-| **Post-Processing** | `EffectComposer`, `UnrealBloomPass`, Custom Vignette Shader |
-| **Audio** | Native HTML5 Web Audio API |
-| **Styling** | Vanilla CSS, Glassmorphism techniques |
+- **Custom Shaders**: Complex objects (Black Holes, Pulsars, Sun) use raw GLSL math instead of giant textures, generating beautiful volumetrics at runtime while keeping the bundle size microscopic.
 
 ---
 
@@ -108,9 +96,8 @@ Spawn near Earth → Explore the Solar System → Track Deep Space Probes → Ap
 ### 1. Clone & Setup
 
 ```bash
-git clone https://github.com/yourusername/sleepwalk.git
-cd sleepwalk
-
+git clone https://github.com/ayu01sh/Sleepwalk.git
+cd Sleepwalk
 npm install
 ```
 
@@ -133,14 +120,14 @@ The game automatically adapts to desktop (Keyboard/Mouse) or mobile devices (Tou
 | **Look around** | Mouse Drag / Pointer Lock | Swipe on empty screen space |
 | **Move Forward/Back** | `W` / `S` | Virtual Joystick (Left zone) |
 | **Strafe Left/Right** | `A` / `D` | Virtual Joystick (Left zone) |
-| **Ascend/Descend** | `Space` / `Ctrl` (or `C`) | `▲` / `▼` Action Buttons |
+| **Ascend/Descend** | `Space` / `Ctrl` | Virtual Joystick (Push/Pull) |
 | **Warp Travel (Boost)** | Hold `Shift` while moving | `WARP` Action Button |
-| **Navigation HUD** | 3D Arrow | N/A |
+| **View Constellations** | Hold `C` | `⭐` Action Button |
+| **Toggle Visor (1st Person)** | Press `V` | N/A |
+| **Adjust Camera Zoom** | Mouse Scroll Wheel | N/A |
 | **Radar Tracking** | Minimap HUD | Minimap HUD |
 
 ---
-
-
 
 ## License
 
