@@ -7,35 +7,17 @@ export default function ControlsOverlay() {
   const { active, progress } = useProgress();
   const [displayProgress, setDisplayProgress] = useState(0);
 
-  // Smoothly interpolate the progress value
+  // Instantly sync progress
   useEffect(() => {
-    let animationFrameId;
-    
-    const updateProgress = () => {
-      setDisplayProgress(current => {
-        // Move 5% of the remaining distance per frame, or at least 0.5%
-        const diff = progress - current;
-        if (diff > 0.1) {
-          return Math.min(progress, current + diff * 0.1 + 0.2);
-        }
-        return progress;
-      });
-      animationFrameId = requestAnimationFrame(updateProgress);
-    };
-
-    updateProgress();
-    return () => cancelAnimationFrame(animationFrameId);
+    setDisplayProgress(progress);
   }, [progress]);
 
   useEffect(() => {
-    // When loading finishes (active becomes false) and smooth progress catches up
+    // When loading finishes (active becomes false)
     if (!active && displayProgress >= 99.9) {
-      const timer = setTimeout(() => {
-        setVisible(false);
-      }, 1500); // Give them 1.5s to read the controls after loading finishes
-      return () => clearTimeout(timer);
+      setVisible(false);
     }
-  }, [active, progress]);
+  }, [active, displayProgress]);
 
   // Hide on any key press, even if still loading
   useEffect(() => {

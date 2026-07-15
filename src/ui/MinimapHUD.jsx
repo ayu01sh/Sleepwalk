@@ -120,8 +120,8 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowBlur = 5;
       ctx.fill();
 
-      // Draw Pulsar (X = -3000, Z = -3000)
-      const pulsarPos = worldToMinimap(playerPos, { x: -3000, z: -3000 });
+      // Draw Pulsar (X = 6000, Z = -6000)
+      const pulsarPos = worldToMinimap(playerPos, { x: 6000, z: -6000 });
       ctx.beginPath();
       ctx.arc(cx + pulsarPos.x, cy + pulsarPos.y, pulsarPos.clamped ? 3 : 5, 0, Math.PI * 2);
       ctx.fillStyle = '#00e5ff'; // Cyan
@@ -129,8 +129,8 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowBlur = 8;
       ctx.fill();
 
-      // Draw Supernova Remnant (X = 5200, Z = 7200)
-      const snPos = worldToMinimap(playerPos, { x: 5200, z: 7200 });
+      // Draw Supernova Remnant (X = -5000, Z = -7000)
+      const snPos = worldToMinimap(playerPos, { x: -5000, z: -7000 });
       ctx.beginPath();
       ctx.arc(cx + snPos.x, cy + snPos.y, snPos.clamped ? 4 : 8, 0, Math.PI * 2);
       ctx.fillStyle = '#ff0066'; // Pink
@@ -147,8 +147,8 @@ export default function MinimapHUD({ astronautRef }) {
       ctx.shadowBlur = 4;
       ctx.fill();
 
-      // Draw Voyager 1 (X = 1500, Z = -2000)
-      const voyagerPos = worldToMinimap(playerPos, { x: 1500, z: -2000 });
+      // Draw Voyager 1 (X = 3000, Z = -2000)
+      const voyagerPos = worldToMinimap(playerPos, { x: 3000, z: -2000 });
       ctx.beginPath();
       ctx.arc(cx + voyagerPos.x, cy + voyagerPos.y, voyagerPos.clamped ? 2 : 4, 0, Math.PI * 2);
       ctx.fillStyle = '#ffd700'; // Gold

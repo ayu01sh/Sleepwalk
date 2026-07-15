@@ -124,7 +124,20 @@ export default function AudioEngine({ astronautRef }) {
     bhOsc.start();
     bhOscRef.current = bhOsc;
 
+    const resumeAudio = () => {
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+    };
+    
+    window.addEventListener('click', resumeAudio);
+    window.addEventListener('touchstart', resumeAudio, { passive: true });
+    window.addEventListener('pointerdown', resumeAudio, { passive: true });
+
     return () => {
+      window.removeEventListener('click', resumeAudio);
+      window.removeEventListener('touchstart', resumeAudio);
+      window.removeEventListener('pointerdown', resumeAudio);
       ctx.close();
     };
   }, [introComplete]);

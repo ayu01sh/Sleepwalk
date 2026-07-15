@@ -5,6 +5,7 @@ export default function MobileControls() {
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const introComplete = useStore((state) => state.introComplete);
   const setMovement = useStore((state) => state.setMovement);
+  const showConstellations = useStore((state) => state.showConstellations);
   
   const joystickBaseRef = useRef(null);
   const [joystickPos, setJoystickPos] = useState({ x: 0, y: 0 });
@@ -118,10 +119,12 @@ export default function MobileControls() {
       <div className="action-buttons-zone">
         <button 
           className="action-btn constellation-btn"
-          onTouchStart={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(true); }}
-          onTouchEnd={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
-          onTouchCancel={(e) => { e.preventDefault(); useStore.getState().setShowConstellations(false); }}
-          style={{ fontSize: '24px' }}
+          onTouchStart={(e) => { 
+            e.preventDefault(); 
+            const store = useStore.getState();
+            store.setShowConstellations(!store.showConstellations); 
+          }}
+          style={{ fontSize: '17px', background: showConstellations ? 'rgba(0, 229, 255, 0.4)' : 'rgba(10, 16, 25, 0.8)' }}
         >
           ⭐
         </button>

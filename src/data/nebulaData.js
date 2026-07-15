@@ -33,13 +33,4 @@ export const monoliths = Array.from({ length: 50 }, (_, i) => {
   };
 });
 
-// Waypoints for navigating through the nebula
-export const nebulaWaypoints = [
-  { id: 'wp-entry', position: [NEBULA_CENTER[0] - 300, 0, NEBULA_CENTER[2] - 300], label: 'Nebula Entry' },
-  ...monoliths.map((m, i) => ({
-    id: `wp-monolith${i + 1}`,
-    position: m.position,
-    label: `Gallery ${i + 1}`
-  })),
-  { id: 'wp-exit', position: [NEBULA_CENTER[0] + 500, 0, NEBULA_CENTER[2] + 500], label: 'Nebula Exit' },
-];
+
