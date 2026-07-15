@@ -125,7 +125,7 @@ export default function ControlsOverlay() {
         </p>
       ) : (
         <p style={{ marginTop: '30px', fontSize: '13px', color: '#888', letterSpacing: '1px' }}>
-          {isMobilePhone ? 'INITIALIZING SYSTEMS...' : 'INITIALIZING FLIGHT SYSTEMS...'}
+          INITIALIZING FLIGHT SYSTEMS...
         </p>
       )}
       
